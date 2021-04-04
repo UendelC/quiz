@@ -18,34 +18,61 @@ class UserControllerTest extends TestCase
      */
     public function testCanShowUsers()
     {
-        $user = User::factory()->create(
-            [
-                'name' => 'Uendel',
-            ]
-        );
+        $users = User::factory()->count(3)->create();
         
-        Sanctum::actingAs(
-            $user
-        );
-    
-        $response = $this->get('api/user');
+        $response = $this->json('GET', 'api/users');
         $response->assertOk();
-        $response->assertJson([$user->toArray()]);
+        $response->assertJson($users->toArray());
     }
 
     public function testCanStoreANewUser()
     {
         $user_data = [
             'name' => 'Uendel',
-            'phone' => '99999999',
             'email' => 'uendel@gmail.com',
+            'type' => 'participant',
             'password' => '123456',
         ];
           
-          $response = $this->post('api/users', $user_data);
+        $response = $this->json('POST', 'api/registration', $user_data);
+        
+        $user = User::first();
+        $response->assertStatus(201);
+        $response->assertJSON(
+            [
+                'name' => $user->name,
+                'email' => $user->email,
+            ]
+        );
+    }
 
-          $response->assertOk();
-          $user = User::firstOrFail();
-          $response->assertJSON($user);
+    public function testCanShowAnUser()
+    {
+        $user = User::factory()->create();
+
+        $response = $this->json('GET', 'api/user/' . $user->id);
+        $response->assertJson(
+            [
+                'name' => $user->name,
+                'email' => $user->email,
+                'type' => $user->type,
+            ]
+        );
+    }
+
+    public function testLogoutIsPossible()
+    {
+        $user = User::factory()->create();
+
+        Sanctum::actingAs($user);
+
+        $response = $this->json('POST', '/api/logout');
+        
+        $response->assertJson(
+            [
+                'message' => 'Tokens Revoked'
+            ]
+        );
+
     }
 }
