@@ -25,7 +25,11 @@ class QuestionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Question::create(
+            [
+                'title' => request('title'),
+            ]
+        );
     }
 
     /**
