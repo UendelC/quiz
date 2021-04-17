@@ -20,7 +20,12 @@ class QuestionTest extends TestCase
     {
         $this->withoutExceptionHandling();
         
-        $this->post('/api/questions', ['title' => 'titulo da questão']);
+        $this->post('/api/questions',
+            [
+                'title' => 'titulo da questão',
+                
+            ]
+        );
 
         $this->assertCount(1, Question::all());
     }
