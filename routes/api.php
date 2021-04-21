@@ -27,7 +27,7 @@ Route::middleware('auth:api')
 Route::get('/users', [UserController::class, 'index']);
 Route::post('/registration', [UserController::class, 'store']);
 Route::get('/user/{user}', [UserController::class, 'show']);
-Route::post('/login', [UserController::class, 'login']);
+// Route::post('/login', [UserController::class, 'login']);
 Route::post('/forgot-password', [UserController::class, 'forgotPassword']);
 
 Route::post('/questions', [QuestionController::class, 'store']);
