@@ -16,11 +16,6 @@ class Choice extends Model
 
     public function question()
     {
-        return $this->belongsTo(Question::class)
-    }
-
-    public function users()
-    {
-        return $this->belongsToMany(User::class);
+        return $this->belongsTo(Question::class);
     }
 }

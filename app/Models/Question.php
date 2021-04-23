@@ -20,4 +20,9 @@ class Question extends Model
     {
         return $this->hasMany(Choice::class);
     }
+
+    public function exams()
+    {
+        return $this->belongsToMany(Exam::class);
+    }
 }

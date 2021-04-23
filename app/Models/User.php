@@ -43,8 +43,8 @@ class User extends Authenticatable
 		'email_verified_at' => 'datetime',
 	];
 
-	public function choices()
+	public function exams()
 	{
-		return $this->hasMany(Choice::class);
+		return $this->belongsToMany(Exam::class);
 	}
 }
