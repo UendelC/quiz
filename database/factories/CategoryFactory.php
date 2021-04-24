@@ -2,17 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Models\Exam;
+use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class ExamFactory extends Factory
+class CategoryFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Exam::class;
+    protected $model = Category::class;
 
     /**
      * Define the model's default state.
@@ -22,7 +22,7 @@ class ExamFactory extends Factory
     public function definition()
     {
         return [
-            'score' => $this->faker->numberBetween(0, 10),
+            'name' => $this->faker->name,
         ];
     }
 }
