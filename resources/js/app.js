@@ -4,6 +4,7 @@ import App from './components/App';
 import vuetify from './vuetify';
 import store from './store';
 
+
 require('./bootstrap');
 
 const app = new Vue({
