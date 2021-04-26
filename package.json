@@ -28,6 +28,7 @@
     },
     "dependencies": {
         "js-cookie": "^2.2.1",
+        "vee-validate": "^3.4.5",
         "vuetify": "^2.4.9",
         "vuex": "^3.6.2"
     }

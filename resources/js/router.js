@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import ExampleComponent from './components/ExampleComponent';
-import LayoutAuth from './components/Auth/LayoutAuth';
+import LoginMenu from './components/Auth/LoginMenu';
 
 Vue.use(VueRouter);
 
@@ -9,7 +9,7 @@ export default new VueRouter({
     routes: [
         {
             path: '/login',
-            component: LayoutAuth,
+            component: LoginMenu,
         },
         {
             path: '/',
