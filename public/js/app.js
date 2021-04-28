@@ -1977,6 +1977,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
@@ -2029,6 +2034,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   email: _this.email,
                   password: _this.password
                 };
+
+                _this.resetResponse();
+
                 axios.post('api/login', payload).then(function (response) {
                   var token = response.data.data.token;
                   js_cookie__WEBPACK_IMPORTED_MODULE_1___default().set('_user_token', token, {
@@ -2042,13 +2050,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   console.log('teste');
                 });
 
-              case 8:
+              case 9:
               case "end":
                 return _context.stop();
             }
           }
         }, _callee);
       }))();
+    },
+    resetResponse: function resetResponse() {
+      this.response.color = '';
+      this.response.message = '';
     }
   }
 });
@@ -42108,6 +42120,34 @@ var render = function() {
             "div",
             { staticClass: "card-body" },
             [
+              _vm.response.message
+                ? _c(
+                    "div",
+                    {
+                      class:
+                        "rounded-sm bg-" + _vm.response.color + "-100 p-4 mb-4"
+                    },
+                    [
+                      _c(
+                        "h3",
+                        {
+                          class:
+                            "text-sm leading-5 font-medium text-" +
+                            _vm.response.color +
+                            "-800"
+                        },
+                        [
+                          _vm._v(
+                            "\n                      " +
+                              _vm._s(_vm.response.message) +
+                              "\n                    "
+                          )
+                        ]
+                      )
+                    ]
+                  )
+                : _vm._e(),
+              _vm._v(" "),
               _c(
                 "ValidationObserver",
                 {

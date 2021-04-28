@@ -17,17 +17,20 @@ class AuthController extends Controller
         $attr = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|unique:users,email',
-            'password' => 'required|string|min:6|confirmed'
+            'password' => 'required|string|min:6',
+            'type' => 'required|in:participant,teacher',
         ]);
 
         $user = User::create([
             'name' => $attr['name'],
             'password' => bcrypt($attr['password']),
-            'email' => $attr['email']
+            'email' => $attr['email'],
+            'type' => $attr['type'],
         ]);
 
         return $this->success([
-            'token' => $user->createToken('API Token')->plainTextToken
+            'token' => $user->createToken('API Token')->plainTextToken,
+            'user' => $user,
         ]);
     }
 
