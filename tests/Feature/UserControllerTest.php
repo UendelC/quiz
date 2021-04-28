@@ -34,10 +34,10 @@ class UserControllerTest extends TestCase
             'password' => '123456',
         ];
           
-        $response = $this->json('POST', 'api/registration', $user_data);
+        $response = $this->json('POST', 'api/register', $user_data);
         
         $user = User::first();
-        $response->assertStatus(201);
+        $response->assertStatus(200);
         $response->assertJSON(
             [
                 'name' => $user->name,
