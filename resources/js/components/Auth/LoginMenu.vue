@@ -31,6 +31,11 @@
                 <div class="card-header">Login</div>
 
                 <div class="card-body">
+                  <div v-if="response.message" :class="`rounded-sm bg-${response.color}-100 p-4 mb-4`">
+                    <h3 :class="`text-sm leading-5 font-medium text-${response.color}-800`">
+                      {{ response.message }}
+                    </h3>
+                  </div>
                     <ValidationObserver tag="form" ref="loginForm" @submit.stop.prevent="login">
                       <div class="form">
                           <div class="form-group row">
@@ -118,6 +123,8 @@
           password: this.password,
         };
 
+        this.resetResponse();
+
         axios.post('api/login', payload).then((response) => {
           const token = response.data.data.token;
           Cookie.set('_user_token', token, { expires: 2});
@@ -128,6 +135,11 @@
           this.response.message = 'Credenciais inválidas.';
           console.log('teste');
         });
+      },
+
+      resetResponse() {
+        this.response.color = '';
+        this.response.message = '';
       }
     }
 
