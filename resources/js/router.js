@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import ExampleComponent from './components/ExampleComponent';
+import HomePage from './pages/HomePage';
 import LoginMenu from './components/Auth/LoginMenu';
 import Register from './components/Auth/Register';
 import Guard from './service/middleware';
@@ -12,7 +12,8 @@ export default new VueRouter({
 		{
 			path: '/',
 			name: 'index',
-			component: ExampleComponent,
+			beforeEnter: Guard.redirectIfNotAuthenticated,
+			component: HomePage,
 		},
 		{
 			path: '/login',
