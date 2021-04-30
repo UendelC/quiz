@@ -21,12 +21,11 @@ Route::post('login', [AuthController::class, 'login'])->name('login');
 Route::post('register', [AuthController::class, 'register'])->name('register');
 Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::middleware('auth:api')
-    ->get(
-        '/user',
-        function (Request $request) {
-            return $request->user();
-        }
+Route::prefix('me')->group(
+    function () {
+        Route::get('/user/{user}', [UserController::class, 'show'])
+            ->middleware('auth:sanctum');
+    }
 );
 
 Route::middleware('auth:sanctum')->group(
@@ -36,8 +35,6 @@ Route::middleware('auth:sanctum')->group(
 );
 
 Route::post('/registration', [UserController::class, 'store']);
-Route::get('/user/{user}', [UserController::class, 'show']);
-// Route::post('/login', [UserController::class, 'login']);
 Route::post('/forgot-password', [UserController::class, 'forgotPassword']);
 
 Route::post('/questions', [QuestionController::class, 'store']);
