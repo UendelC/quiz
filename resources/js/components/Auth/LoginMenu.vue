@@ -84,7 +84,7 @@
 </template>
 
 <script>
-	import Cookie from 'js-cookie';
+	import Cookie from '../../service/cookie';
 	import { ValidationObserver, ValidationProvider } from 'vee-validate';
 	import { required, email } from 'vee-validate/dist/rules';
 	import { extend } from 'vee-validate';
@@ -127,7 +127,7 @@
 
 				axios.post('api/login', payload).then((response) => {
 					const token = response.data.data.token;
-					Cookie.set('_user_token', token, { expires: 2});
+					Cookie.setToken(token);
 
 					this.$store.commit('user/STORE_USER', response.data.data.user);
 				}).catch(() => {
