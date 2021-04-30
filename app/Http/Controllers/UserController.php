@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -54,11 +55,7 @@ class UserController extends Controller
 
     public function show(User $user)
     {
-        return [
-            'name' => $user->name,
-            'email' => $user->email,
-            'type' => $user->type,
-        ];
+        return new UserResource(auth()->user());
     }
 
     public function login(Request $request)
@@ -103,7 +100,7 @@ class UserController extends Controller
     {
         $request->validate(
             [
-                'email' => 'required|string|email' 
+                'email' => 'required|string|email'
             ]
         );
         
