@@ -2035,17 +2035,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                 _this.resetResponse();
 
-                axios.post('api/login', payload).then(function (response) {
+                _context.next = 9;
+                return axios.post('api/login', payload).then(function (response) {
                   var token = response.data.data.token;
                   _service_cookie__WEBPACK_IMPORTED_MODULE_1__.default.setToken(token);
 
                   _this.$store.commit('user/STORE_USER', response.data.data.user);
+
+                  _this.$router.push({
+                    name: 'index'
+                  });
                 })["catch"](function () {
                   _this.response.color = 'red';
                   _this.response.message = 'Credenciais inválidas.';
                 });
 
-              case 8:
+              case 9:
               case "end":
                 return _context.stop();
             }
@@ -2399,7 +2404,11 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_4__.default({
 /*!***********************************!*\
   !*** ./resources/js/bootstrap.js ***!
   \***********************************/
-/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _service_cookie__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./service/cookie */ "./resources/js/service/cookie.js");
 
 window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 /**
@@ -2422,9 +2431,21 @@ try {
 
 
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js"); // window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+// window.axios.default.baseUrl = '';
 
 window.axios.defaults.headers.common['Content-type'] = 'application/json';
-window.axios.defaults.headers.common['Accept'] = 'application/json';
+window.axios.defaults.headers.common['Accept'] = 'application/json'; // window.axios.interceptors.request.use(
+//     function (AxiosRequestConfig) {
+//         console.log('teste');
+//         const token = Cookie.getToken();
+//         console.log(token);
+//         if (token) {
+//             config.headers.common['Authorization'] = token;
+//         }
+//         return config;
+//     }
+// );
+
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting
@@ -2528,22 +2549,64 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _cookie__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./cookie */ "./resources/js/service/cookie.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _cookie__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./cookie */ "./resources/js/service/cookie.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../store */ "./resources/js/store/index.js");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+
+
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   redirectIfNotAuthenticated: function redirectIfNotAuthenticated(to, from, next) {
-    var token = _cookie__WEBPACK_IMPORTED_MODULE_0__.default.getToken();
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
+      var token;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              token = _cookie__WEBPACK_IMPORTED_MODULE_1__.default.getToken();
 
-    if (!token) {
-      next({
-        name: 'login'
-      });
-    }
+              if (!token) {
+                next({
+                  name: 'login'
+                });
+              }
 
-    next();
+              _context.next = 4;
+              return axios__WEBPACK_IMPORTED_MODULE_2___default().get('api/me/user').then(function (response) {
+                var _store$state, _store$state$user;
+
+                if (!(_store__WEBPACK_IMPORTED_MODULE_3__.default !== null && _store__WEBPACK_IMPORTED_MODULE_3__.default !== void 0 && (_store$state = _store__WEBPACK_IMPORTED_MODULE_3__.default.state) !== null && _store$state !== void 0 && (_store$state$user = _store$state.user) !== null && _store$state$user !== void 0 && _store$state$user.id)) {
+                  _store__WEBPACK_IMPORTED_MODULE_3__.default.commit('user/STORE_USER', response.data.data);
+                }
+              })["catch"](function () {
+                _cookie__WEBPACK_IMPORTED_MODULE_1__.default.deleteToken();
+                next({
+                  name: 'login'
+                });
+              });
+
+            case 4:
+              next();
+
+            case 5:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }))();
   },
   redirectIfAuthenticated: function redirectIfAuthenticated(to, from, next) {
-    var token = _cookie__WEBPACK_IMPORTED_MODULE_0__.default.getToken();
+    var token = _cookie__WEBPACK_IMPORTED_MODULE_1__.default.getToken();
     var n;
 
     if (token) {

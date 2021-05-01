@@ -23,7 +23,7 @@ Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::prefix('me')->group(
     function () {
-        Route::get('/user/{user}', [UserController::class, 'show'])
+        Route::get('/user', [UserController::class, 'show'])
             ->middleware('auth:sanctum');
     }
 );
