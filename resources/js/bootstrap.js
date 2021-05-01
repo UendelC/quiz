@@ -1,3 +1,5 @@
+import Cookie from './service/cookie';
+
 window._ = require('lodash');
 
 /**
@@ -22,9 +24,22 @@ try {
 window.axios = require('axios');
 
 // window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+// window.axios.default.baseUrl = '';
 window.axios.defaults.headers.common['Content-type'] = 'application/json';
 window.axios.defaults.headers.common['Accept'] = 'application/json';
 
+// window.axios.interceptors.request.use(
+//     function (AxiosRequestConfig) {
+//         console.log('teste');
+//         const token = Cookie.getToken();
+//         console.log(token);
+//         if (token) {
+//             config.headers.common['Authorization'] = token;
+//         }
+
+//         return config;
+//     }
+// );
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening

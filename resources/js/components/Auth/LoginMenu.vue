@@ -125,11 +125,12 @@
 
 				this.resetResponse();
 
-				axios.post('api/login', payload).then((response) => {
+				await axios.post('api/login', payload).then((response) => {
 					const token = response.data.data.token;
 					Cookie.setToken(token);
 
 					this.$store.commit('user/STORE_USER', response.data.data.user);
+					this.$router.push({name: 'index'});
 				}).catch(() => {
 					this.response.color = 'red';
 					this.response.message = 'Credenciais inválidas.';
