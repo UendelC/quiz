@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import HomePage from './pages/HomePage';
 import LoginMenu from './components/Auth/LoginMenu';
 import Register from './components/Auth/Register';
+import AboutPage from './pages/AboutPage';
 import Guard from './service/middleware';
 
 Vue.use(VueRouter);
@@ -26,6 +27,11 @@ export default new VueRouter({
 			name: 'register',
 			component: Register,
 		},
+		{
+			path: '/about',
+			name: 'about',
+			component: AboutPage,
+		}
 
 	],
 	mode: 'history',
