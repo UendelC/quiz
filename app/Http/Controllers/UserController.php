@@ -76,7 +76,7 @@ class UserController extends Controller
         $token = $user->createToken('app-token')->plainTextToken;
 
         $user->token = $token;
-        
+
         return response(
             [
                 'name' => $user->name,
@@ -103,7 +103,7 @@ class UserController extends Controller
                 'email' => 'required|string|email'
             ]
         );
-        
+
         try {
             $mail = Password::sendResetLink($request->only('email'));
 
