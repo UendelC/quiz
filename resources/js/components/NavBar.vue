@@ -7,7 +7,7 @@
 
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
-        <b-nav-item href="#">Cadastrar Informações</b-nav-item>
+        <b-nav-item @click="handleForm()">Cadastrar Informações</b-nav-item>
         <b-nav-item href="#">Relatórios</b-nav-item>
       </b-navbar-nav>
 
@@ -49,6 +49,10 @@
 
       homeHandler() {
         this.$router.push({name: 'index'});
+      },
+
+      handleForm() {
+        this.$router.push({name: 'register-info'});
       }
     }
   }

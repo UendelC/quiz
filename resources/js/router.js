@@ -5,6 +5,7 @@ import LoginMenu from './components/Auth/LoginMenu';
 import Register from './components/Auth/Register';
 import AboutPage from './pages/AboutPage';
 import Guard from './service/middleware';
+import RegisterInfoPage from './pages/RegisterInfoPage';
 
 Vue.use(VueRouter);
 
@@ -31,6 +32,11 @@ export default new VueRouter({
 			path: '/about',
 			name: 'about',
 			component: AboutPage,
+		},
+		{
+			path: '/register-info',
+			name: 'register-info',
+			component: RegisterInfoPage,
 		}
 
 	],
