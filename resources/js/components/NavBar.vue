@@ -1,22 +1,31 @@
 <template>
-    <v-app-bar
-      color="deep-purple"
-      dark
-    >
-      <v-btn>
-        <v-toolbar-title @click="homeHandler()">Quiz App</v-toolbar-title>
-      </v-btn>
+    <div class="pb-3">
+  <b-navbar toggleable="lg" type="dark" variant="info">
+    <b-navbar-brand href="" @click="homeHandler()">Quiz App</b-navbar-brand>
 
-      <v-spacer></v-spacer>
+    <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
-      <v-btn @click="aboutHandler()">
-        Sobre
-      </v-btn>
+    <b-collapse id="nav-collapse" is-nav>
+      <b-navbar-nav>
+        <b-nav-item href="#">Cadastrar Informações</b-nav-item>
+        <b-nav-item href="#">Relatórios</b-nav-item>
+      </b-navbar-nav>
 
-      <v-btn @click="logout()">
-        Sair
-      </v-btn>
-    </v-app-bar>
+      <!-- Right aligned nav items -->
+      <b-navbar-nav class="ml-auto">
+        <b-nav-item @click="aboutHandler()">Sobre</b-nav-item>
+        <b-nav-item-dropdown right>
+          <!-- Using 'button-content' slot -->
+          <template #button-content>
+            <em>User</em>
+          </template>
+          <b-dropdown-item href="#">Profile</b-dropdown-item>
+          <b-dropdown-item @click="logout()">Sign Out</b-dropdown-item>
+        </b-nav-item-dropdown>
+      </b-navbar-nav>
+    </b-collapse>
+  </b-navbar>
+</div>
 </template>
 
 <script>

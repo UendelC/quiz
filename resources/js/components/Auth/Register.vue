@@ -70,6 +70,9 @@
 									<button type="submit" class="btn btn-primary">
 										Registrar
 									</button>
+									<button class="btn btn-primary" @click="loginHandler()">
+										Logar
+									</button>
 								</div>
 							</div>
 						</div>
@@ -147,6 +150,10 @@ export default {
 			this.email = '';
 			this.password = '';
 			this.type = '';
+		},
+
+		loginHandler() {
+			this.$router.push({name: 'login'});
 		}
 	}
 }

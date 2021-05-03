@@ -46,7 +46,7 @@
 																	<input id="email" type="email" class="form-control" name="email" required autocomplete="email" autofocus v-model="email">
 
 																	<span v-if="!!errors[0]" class="invalid-feedback" role="alert">
-																			<strong>{{ errors[0] }}</strong>
+																			<strong>{{ errors[0] + '1'}}</strong>
 																	</span>
 																</ValidationProvider>
 															</div>
@@ -60,9 +60,8 @@
 																	<input id="password" type="password" class="form-control" name="password" required autocomplete="current-password" v-model="password">
 
 																		<span v-if="!!errors[0]" class="invalid-feedback" role="alert">
-																			<strong>{{ errors[0] }}</strong>
+																			<strong>{{ errors[0] + '2'}}</strong>
 																		</span>
-																		{{ errors }}
 																</ValidationProvider>
 															</div>
 													</div>
@@ -71,6 +70,9 @@
 															<div class="col-md-8 offset-md-4">
 																	<button type="submit" class="btn btn-primary">
 																			Login
+																	</button>
+																	<button class="btn btn-primary" @click="registerHandler()">
+																			Registrar-se
 																	</button>
 															</div>
 													</div>
@@ -140,6 +142,11 @@
 			resetResponse() {
 				this.response.color = '';
 				this.response.message = '';
+			},
+
+			registerHandler() {
+				console.log('teste');
+				this.$router.push({name: 'register'});
 			}
 		}
 
