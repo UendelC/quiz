@@ -10,7 +10,11 @@ export default {
 			next({name: 'login'});
 		}
 
-		await axios.get('api/me/user')
+		await axios.get('api/me/user', {
+			headers: {
+				Authorization: 'Bearer ' + token
+			}
+		 })
 		.then((response) => {
 			if (!store?.state?.user?.id) {
 				store.commit('user/STORE_USER', response.data.data);

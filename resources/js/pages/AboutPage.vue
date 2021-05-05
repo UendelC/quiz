@@ -1,7 +1,13 @@
 <template>
 <div>
     <nav-bar></nav-bar>
-    <h1>Página de sobre</h1>
+    <section class="section">
+        <div class="container-fliud">
+            <img alt="Vue logo" class="rounded-circle" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Woman_1.jpg/220px-Woman_1.jpg">
+            <h1>Software Developer</h1>
+            <p>Este sistema foi desenvolvido por Uendel Couto como Trabalho de Conclusão de curso no ano de 2021.</p>
+        </div>
+    </section>
 </div>
 </template>
 
