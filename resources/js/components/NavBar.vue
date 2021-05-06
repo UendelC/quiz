@@ -8,7 +8,7 @@
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
         <b-nav-item @click="handleForm()">Cadastrar Informações</b-nav-item>
-        <b-nav-item href="#">Relatórios</b-nav-item>
+        <b-nav-item @click="handleReport()">Relatórios</b-nav-item>
       </b-navbar-nav>
 
       <!-- Right aligned nav items -->
@@ -53,6 +53,10 @@
 
       handleForm() {
         this.$router.push({name: 'register-info'});
+      },
+
+      handleReport() {
+        this.$router.push({name: 'report'});
       }
     }
   }

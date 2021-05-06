@@ -6,6 +6,7 @@ import Register from './components/Auth/Register';
 import AboutPage from './pages/AboutPage';
 import Guard from './service/middleware';
 import RegisterInfoPage from './pages/RegisterInfoPage';
+import Report from './pages/StatisticsPage';
 
 Vue.use(VueRouter);
 
@@ -37,6 +38,11 @@ export default new VueRouter({
 			path: '/register-info',
 			name: 'register-info',
 			component: RegisterInfoPage,
+		},
+		{
+			path: '/report',
+			name: 'report',
+			component: Report,
 		}
 
 	],

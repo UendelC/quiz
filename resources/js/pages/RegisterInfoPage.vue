@@ -58,6 +58,7 @@
 </template>
 
 <script>
+import NavBar from '../components/NavBar';
   export default {
     data() {
       return {
@@ -71,6 +72,11 @@
         show: true
       }
     },
+
+    components: {
+      NavBar,
+    },
+
     methods: {
       onSubmit(event) {
         event.preventDefault()
