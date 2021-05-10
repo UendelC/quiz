@@ -6,9 +6,14 @@
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
     <b-collapse id="nav-collapse" is-nav>
-      <b-navbar-nav>
+      <b-navbar-nav v-if="user.type==='teacher'">
         <b-nav-item @click="handleForm()">Cadastrar Informações</b-nav-item>
         <b-nav-item @click="handleReport()">Relatórios</b-nav-item>
+      </b-navbar-nav>
+
+      <b-navbar-nav v-if="user.type==='participant'">
+        <b-nav-item>Realizar Prova</b-nav-item>
+        <b-nav-item>Boletim</b-nav-item>
       </b-navbar-nav>
 
       <!-- Right aligned nav items -->
@@ -30,11 +35,19 @@
 
 <script>
   import Cookie from '../service/cookie';
+  import { mapState } from 'vuex';
+
   export default {
     data: () => ({
       drawer: false,
       group: null,
     }),
+
+    computed: {
+      ...mapState({
+        user: state => state.user.user,
+      }),
+    },
 
     methods: {
       async logout() {
