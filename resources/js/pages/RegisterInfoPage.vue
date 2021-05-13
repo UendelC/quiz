@@ -1,58 +1,54 @@
 <template>
 <div>
   <nav-bar></nav-bar>
-  <div>
+  <div class="container">
     <b-form @submit="onSubmit" @reset="onReset" v-if="show">
       <b-form-group
         id="input-group-1"
-        label="Email address:"
+        label="Categoria:"
         label-for="input-1"
-        description="We'll never share your email with anyone else."
       >
         <b-form-input
           id="input-1"
-          v-model="form.email"
-          type="email"
-          placeholder="Enter email"
+          v-model="form.category"
+          type="select"
+          placeholder="Categoria"
           required
         ></b-form-input>
       </b-form-group>
 
-      <b-form-group id="input-group-2" label="Your Name:" label-for="input-2">
+      <b-form-group id="input-group-2" label="Enunciado da Questão:" label-for="input-2">
         <b-form-input
           id="input-2"
-          v-model="form.name"
-          placeholder="Enter name"
+          v-model="form.question"
+          placeholder="Digite o enunciado"
           required
         ></b-form-input>
       </b-form-group>
 
-      <b-form-group id="input-group-3" label="Food:" label-for="input-3">
-        <b-form-select
+      <b-form-group id="input-group-3" label="Explicação da Questão:" label-for="input-3">
+        <b-form-input
           id="input-3"
-          v-model="form.food"
-          :options="foods"
+          v-model="form.explanation"
+          placeholder="Explicação da questão"
           required
-        ></b-form-select>
+        ></b-form-input>
       </b-form-group>
 
-      <b-form-group id="input-group-4" v-slot="{ ariaDescribedby }">
-        <b-form-checkbox-group
-          v-model="form.checked"
-          id="checkboxes-4"
-          :aria-describedby="ariaDescribedby"
-        >
-          <b-form-checkbox value="me">Check me out</b-form-checkbox>
-          <b-form-checkbox value="that">Check that out</b-form-checkbox>
-        </b-form-checkbox-group>
+      <b-form-group id="input-group-4" label="Alternativas:" label-for="input-4">
+        <div v-for="(choice, index) in form.choices" :key="index">
+          <b-form-group label="choice.name">
+            {{ choice }}
+            <b-form-input></b-form-input>
+            <b-form-checkbox></b-form-checkbox>
+          </b-form-group>
+        </div>
+        <b-button @click="addChoiceField()">Adicionar Alternativa</b-button>
       </b-form-group>
 
       <b-button type="submit" variant="primary">Submit</b-button>
       <b-button type="reset" variant="danger">Reset</b-button>
     </b-form>
-    <b-card class="mt-3" header="Form Data Result">
-      <pre class="m-0">{{ form }}</pre>
-    </b-card>
   </div>
 </div>
 </template>
@@ -63,12 +59,11 @@ import NavBar from '../components/NavBar';
     data() {
       return {
         form: {
-          email: '',
-          name: '',
-          food: null,
-          checked: []
+          category: '',
+          question: '',
+          explanation: '',
+          choices: [],
         },
-        foods: [{ text: 'Select One', value: null }, 'Carrots', 'Beans', 'Tomatoes', 'Corn'],
         show: true
       }
     },
@@ -85,15 +80,21 @@ import NavBar from '../components/NavBar';
       onReset(event) {
         event.preventDefault()
         // Reset our form values
-        this.form.email = ''
-        this.form.name = ''
-        this.form.food = null
-        this.form.checked = []
+        this.form.category = ''
+        this.form.question = ''
+        this.form.explanation = null
         // Trick to reset/clear native browser form validation state
         this.show = false
         this.$nextTick(() => {
           this.show = true
         })
+      },
+
+      addChoiceField() {
+        this.form.choices.push({
+          name: 'a',
+          is_right: false,
+        });
       }
     }
   }
