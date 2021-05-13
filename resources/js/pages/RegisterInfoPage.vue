@@ -37,10 +37,10 @@
 
       <b-form-group id="input-group-4" label="Alternativas:" label-for="input-4">
         <div v-for="(choice, index) in form.choices" :key="index">
-          <b-form-group label="choice.name">
-            {{ choice }}
-            <b-form-input></b-form-input>
-            <b-form-checkbox></b-form-checkbox>
+          <b-form-group label="Opção:">
+            <b-form-input v-model="choice.text"></b-form-input>
+            <b-form-checkbox v-model="choice.is_right"></b-form-checkbox>
+            <b-button @click="removeChoice(index)">X</b-button>
           </b-form-group>
         </div>
         <b-button @click="addChoiceField()">Adicionar Alternativa</b-button>
@@ -55,6 +55,7 @@
 
 <script>
 import NavBar from '../components/NavBar';
+
   export default {
     data() {
       return {
@@ -64,7 +65,8 @@ import NavBar from '../components/NavBar';
           explanation: '',
           choices: [],
         },
-        show: true
+        show: true,
+        letterIndex: 0,
       }
     },
 
@@ -92,9 +94,16 @@ import NavBar from '../components/NavBar';
 
       addChoiceField() {
         this.form.choices.push({
-          name: 'a',
+          name: '',
           is_right: false,
+          text: '',
         });
+
+        this.letterIndex++;
+      },
+
+      removeChoice(index) {
+        this.form.choices.splice(index, 1);
       }
     }
   }
