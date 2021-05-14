@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ExamController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Request;
@@ -31,6 +32,7 @@ Route::prefix('me')->group(
 Route::middleware('auth:sanctum')->group(
     function () {
         Route::get('/users', [UserController::class, 'index']);
+        Route::post('/exams', [ExamController::class, 'store']);
     }
 );
 

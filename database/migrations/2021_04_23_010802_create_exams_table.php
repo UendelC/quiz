@@ -15,11 +15,11 @@ class CreateExamsTable extends Migration
     {
         Schema::create('exams', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users');
-            $table->float('score');
+            $table->float('score')->nullable();
             $table->timestamps();
         });
     }

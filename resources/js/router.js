@@ -7,6 +7,7 @@ import AboutPage from './pages/AboutPage';
 import Guard from './service/middleware';
 import RegisterInfoPage from './pages/RegisterInfoPage';
 import Report from './pages/StatisticsPage';
+import ExamPage from './pages/ExamPage';
 
 Vue.use(VueRouter);
 
@@ -43,6 +44,11 @@ export default new VueRouter({
 			path: '/report',
 			name: 'report',
 			component: Report,
+		},
+		{
+			path: '/exam',
+			name: 'exam',
+			component: ExamPage,
 		}
 
 	],

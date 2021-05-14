@@ -39,7 +39,7 @@
         <div v-for="(choice, index) in form.choices" :key="index">
           <b-form-group label="Opção:">
             <b-form-input v-model="choice.text"></b-form-input>
-            <b-form-checkbox v-model="choice.is_right"></b-form-checkbox>
+            <b-form-checkbox v-model="choice.is_right">Marque se a opção for a correta</b-form-checkbox>
             <b-button @click="removeChoice(index)">X</b-button>
           </b-form-group>
         </div>
