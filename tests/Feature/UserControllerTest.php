@@ -67,7 +67,7 @@ class UserControllerTest extends TestCase
         Sanctum::actingAs($user);
 
         $response = $this->json('POST', '/api/logout');
-        
+
         $response->assertJson(
             [
                 'message' => 'Tokens Revoked'
