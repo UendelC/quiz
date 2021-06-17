@@ -19,11 +19,10 @@ class QuestionTest extends TestCase
     public function testAQuestionCanBeAdded()
     {
         $this->withoutExceptionHandling();
-        
+
         $this->post('/api/questions',
             [
                 'title' => 'titulo da questão',
-                
             ]
         );
 
