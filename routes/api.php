@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\UserController;
@@ -33,6 +34,7 @@ Route::middleware('auth:sanctum')->group(
     function () {
         Route::get('/users', [UserController::class, 'index']);
         Route::post('/exams', [ExamController::class, 'store']);
+        Route::get('/categories', [CategoryController::class, 'index']);
     }
 );
 
