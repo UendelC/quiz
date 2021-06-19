@@ -8,18 +8,7 @@
         label="Categoria:"
         label-for="input-1"
       >
-      <b-form-select
-        v-model="form.category"
-        :options="options"
-      >
-      </b-form-select>
-        <!-- <b-form-input
-          id="input-1"
-          v-model="form.category"
-          type="select"
-          placeholder="Categoria"
-          required
-        ></b-form-input> -->
+        <b-form-select v-model="form.category" :options="options"></b-form-select>
       </b-form-group>
 
       <b-form-group id="input-group-2" label="Enunciado da Questão:" label-for="input-2">
@@ -60,6 +49,10 @@
 
 <script>
 import NavBar from '../components/NavBar';
+import axios from 'axios';
+import Cookie from '../service/cookie';
+
+const token = Cookie.getToken();
 
   export default {
     data() {
@@ -71,14 +64,7 @@ import NavBar from '../components/NavBar';
           choices: [],
         },
         show: true,
-        letterIndex: 0,
-        options: [
-          { value: null, text: 'Please select an option' },
-          { value: 'a', text: 'This is First option' },
-          { value: 'b', text: 'Selected Option' },
-          { value: { C: '3PO' }, text: 'This is an option with object value' },
-          { value: 'd', text: 'This one is disabled', disabled: true }
-        ],
+        options: [],
       }
     },
 
@@ -86,10 +72,17 @@ import NavBar from '../components/NavBar';
       NavBar,
     },
 
+    created() {
+      this.getCategories();
+    },
+
     methods: {
       onSubmit(event) {
         event.preventDefault()
         alert(JSON.stringify(this.form))
+        if (form.choices.length > 0) {
+
+        }
       },
       onReset(event) {
         event.preventDefault()
@@ -97,6 +90,7 @@ import NavBar from '../components/NavBar';
         this.form.category = ''
         this.form.question = ''
         this.form.explanation = null
+        this.form.choices = [];
         // Trick to reset/clear native browser form validation state
         this.show = false
         this.$nextTick(() => {
@@ -106,16 +100,25 @@ import NavBar from '../components/NavBar';
 
       addChoiceField() {
         this.form.choices.push({
-          name: '',
           is_right: false,
           text: '',
         });
-
-        this.letterIndex++;
       },
 
       removeChoice(index) {
         this.form.choices.splice(index, 1);
+      },
+
+      getCategories() {
+        axios.get('api/categories', {
+          headers: {
+            Authorization: 'Bearer ' + token
+          }
+        }).then( response => {
+          this.options = response.data.data.map(item => {
+            return { text: item.name, value: item.id};
+          });
+        });
       }
     }
   }
