@@ -79,10 +79,29 @@ const token = Cookie.getToken();
     methods: {
       onSubmit(event) {
         event.preventDefault()
-        alert(JSON.stringify(this.form))
-        if (form.choices.length > 0) {
 
+        if (this.form.choices.length <= 1) {
+          alert('Você deve cadastrar ao menos duas alternativas');
         }
+
+        if (this.form.choices.some(item => item.text.length === 0)) {
+          alert('todas as alternativas devem ter seus textos');
+        }
+
+        const amountOfRightChoices = this.form.choices.reduce((accumulator, currentValue) => {
+          return accumulator + (currentValue.is_right ? 1 : 0);
+          }, 0
+        );
+
+        if (amountOfRightChoices === 0) {
+          alert('Ao menos uma alternativa deve estar correta');
+        }
+
+        if (amountOfRightChoices > 1) {
+          alert('Apenas uma alternativa deve ser correta');
+        }
+
+        console.log(this.form);
       },
       onReset(event) {
         event.preventDefault()
