@@ -40,5 +40,5 @@ Route::middleware('auth:sanctum')->group(
 
 Route::post('/registration', [UserController::class, 'store']);
 Route::post('/forgot-password', [UserController::class, 'forgotPassword']);
-
+Route::get('{user}/exams', [ExamController::class, 'index']);
 Route::post('/questions', [QuestionController::class, 'store']);
