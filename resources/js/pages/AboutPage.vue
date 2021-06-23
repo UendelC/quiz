@@ -3,9 +3,11 @@
     <nav-bar></nav-bar>
     <section class="section">
         <div class="container text-center">
-            <img alt="Vue logo" class="rounded-circle" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Woman_1.jpg/220px-Woman_1.jpg">
-            <h1>Software Developer</h1>
-            <p>Este sistema foi desenvolvido por Uendel Couto como Trabalho de Conclusão de curso no ano de 2021.</p>
+            <img alt="Univasf Logo" class="" src="https://portais.univasf.edu.br/imagens-noticias/MarcaUnivasfCompletaComfundo.jpg">
+            <h1><strong>Trabalho apresentado à Universidade Federal do Vale do São Francisco - UNIVASF, Campus Juazeiro, como requisito para obtenção do título de Bacharel em Engenharia da Computação.</strong></h1>
+            <p>Aluno: Uendel Luiz Neto Couto da Silva</p>
+            <p>Orientador: Brauliro Gonçalves Leal</p>
+
         </div>
     </section>
 </div>

@@ -32,7 +32,7 @@
       <b-form-group id="input-group-4" label="Alternativas:" label-for="input-4">
         <div v-for="(choice, index) in form.choices" :key="index">
           <b-form-group label="Opção:">
-            <b-form-input v-model="choice.text"></b-form-input>
+            <b-form-input v-model="choice.description"></b-form-input>
             <b-form-checkbox v-model="choice.is_right">Marque se a opção for a correta</b-form-checkbox>
             <b-button @click="removeChoice(index)">X</b-button>
           </b-form-group>
@@ -84,7 +84,7 @@ const token = Cookie.getToken();
           alert('Você deve cadastrar ao menos duas alternativas');
         }
 
-        if (this.form.choices.some(item => item.text.length === 0)) {
+        if (this.form.choices.some(item => item.description.length === 0)) {
           alert('todas as alternativas devem ter seus textos');
         }
 
@@ -101,11 +101,23 @@ const token = Cookie.getToken();
           alert('Apenas uma alternativa deve ser correta');
         }
 
-        console.log(this.form);
+        axios.post('api/exams', this.form, {
+          headers: {
+            Authorization: 'Bearer ' + token
+          }
+        }).then( response => {
+          alert('Pergunta cadastrada com sucesso');
+          this.resetForm();
+        });
       },
+
       onReset(event) {
         event.preventDefault()
         // Reset our form values
+        this.resetForm();
+      },
+
+      resetForm() {
         this.form.category = ''
         this.form.question = ''
         this.form.explanation = null
@@ -120,7 +132,7 @@ const token = Cookie.getToken();
       addChoiceField() {
         this.form.choices.push({
           is_right: false,
-          text: '',
+          description: '',
         });
       },
 
