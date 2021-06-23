@@ -2,14 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ExamResource;
 use App\Models\Category;
 use App\Models\Choice;
 use App\Models\Exam;
 use App\Models\Question;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ExamController extends Controller
 {
+    public function index(User $user)
+    {
+        $previous_exams = $user->exams()->pluck('id');
+        $exam = Exam::whereNotIn('id', $previous_exams)->latest()->first();
+
+        return new ExamResource($exam);
+    }
+
     public function store(Request $request)
     {
         $request->validate(
@@ -17,16 +27,13 @@ class ExamController extends Controller
                 'category' => 'required',
                 'question' => 'required',
                 'explanation' => 'required',
+                'choices' => 'required'
             ]
         );
 
         $exam = Exam::create();
 
-        $category = Category::create(
-            [
-                'name' => $request['category'],
-            ]
-        );
+        $category = Category::findOrFail($request['category']);
 
         $question = Question::create(
             [
@@ -47,9 +54,10 @@ class ExamController extends Controller
             );
         }
 
-        return response()->json([
-            'status' => 'ok',
-            'exam' => $exam->toArray(),
-        ]);
+        return response()->json(
+            [
+                'status' => 'ok',
+            ]
+        );
     }
 }
