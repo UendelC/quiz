@@ -12,8 +12,9 @@ use Illuminate\Http\Request;
 
 class ExamController extends Controller
 {
-    public function index(User $user)
+    public function index()
     {
+        $user = auth()->user();
         $previous_exams = $user->exams()->pluck('id');
         $exam = Exam::whereNotIn('id', $previous_exams)->latest()->first();
 

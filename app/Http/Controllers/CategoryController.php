@@ -12,6 +12,6 @@ class CategoryController extends Controller
     {
         $categories = Category::all();
 
-        return  new CategoryResource($categories);
+        return CategoryResource::collection($categories);
     }
 }

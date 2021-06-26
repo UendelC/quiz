@@ -35,10 +35,10 @@ Route::middleware('auth:sanctum')->group(
         Route::get('/users', [UserController::class, 'index']);
         Route::post('/exams', [ExamController::class, 'store']);
         Route::get('/categories', [CategoryController::class, 'index']);
+        Route::get('/exams', [ExamController::class, 'index']);
     }
 );
 
 Route::post('/registration', [UserController::class, 'store']);
 Route::post('/forgot-password', [UserController::class, 'forgotPassword']);
-Route::get('{user}/exams', [ExamController::class, 'index']);
 Route::post('/questions', [QuestionController::class, 'store']);

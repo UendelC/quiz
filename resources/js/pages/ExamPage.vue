@@ -1,55 +1,101 @@
 <template>
   <div>
     <nav-bar></nav-bar>
-    <div class="quiz-container">
-        <div class="quiz-header">
-            <h2 id="question">Question text</h2>
-            <ul>
-                <li>
-                    <input type="radio" id="a" name="answer" class="answer">
-                    <label id="a_text" for="a">Question</label>
-                </li>
-                <li>
-                    <input type="radio" id="b" name="answer" class="answer">
-                    <label id="b_text" for="b">Question</label>
-                </li>
-                <li>
-                    <input type="radio" id="c" name="answer" class="answer">
-                    <label id="c_text" for="c">Question</label>
-                </li>
-                <li>
-                    <input type="radio" id="d" name="answer" class="answer">
-                    <label id="d_text" for="d">Question</label>
-                </li>
-            </ul>
-        </div>
-        <button id="submit">Submit</button>
+    <div class="row justify-content-center">
+      <div class="quiz-container">
+          <b-form @submit="handleSubmit" v-if="exam.questions[questionIndex]">
+            <div class="quiz-header">
+              <h2>{{ exam.questions[questionIndex].title }}</h2>
+              <b-form-checkbox-group
+                v-model="selected"
+                :options="options"
+                :state="valid"
+                stacked
+                class="answer"
+                name="checkbox-validation"
+              >
+                <b-form-invalid-feedback :state="valid">Selecione uma questão</b-form-invalid-feedback>
+                <b-form-valid-feedback :state="valid">Resposta cadastrada com sucesso!</b-form-valid-feedback>
+              </b-form-checkbox-group>
+            </div>
+            <b-button type="submit" class="button-exam">Submit</b-button>
+          </b-form>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import NavBar from '../components/NavBar';
+import Cookie from '../service/cookie';
+
+const token = Cookie.getToken();
+
 export default {
   components: {
     NavBar
   },
-  
+
+  created() {
+    this.getExam();
+  },
+
   data() {
-    exam: []
+    return {
+      exam: {
+        questions: {
+          id: '',
+          title: '',
+          choices: {
+            id: '',
+            description: ''
+          }
+        }
+      },
+      questionIndex: 0,
+      selected: [],
+      valid: null,
+    }
+  },
+
+  computed: {
+    options() {
+      return this.exam.questions[this.questionIndex].choices.map( item => { return {text: item.description, value: item.id} });
+    }
   },
 
   methods: {
     getExam() {
-      axios.get('api/categories', {
+      axios.get('api/exams', {
           headers: {
             Authorization: 'Bearer ' + token
           }
-        }).then( response => {
-          this.options = response.data.data.map(item => {
-            return { text: item.name, value: item.id};
-          });
+        })
+        .then( response => {
+          this.exam = response.data.data;
         });
+    },
+
+    handleCheck(itemId) {
+      this.selected = itemId;
+    },
+
+    advanceQuestion() {
+      if (this.questionIndex < this.exam.questions.length - 1) {
+        this.questionIndex++;
+        return false;
+      }
+
+      return true;
+    },
+
+    handleSubmit(event) {
+      event.preventDefault();
+      this.valid = this.selected.length === 1;
+      const finalQuestion = this.advanceQuestion();
+      if (finalQuestion) {
+        console.log('enviar para a api '+this.selected);
+      }
     }
   },
 }
@@ -60,8 +106,8 @@ export default {
     box-sizing: border-box;
 }
 
-body {
-    background-color: #b8c6db;
+body-component {
+    background-color: #0408;
     background-image: linear-gradient(315deg, #b8c6db, #f5f7fa, 100%);
     display: flex;
     align-items: center;
@@ -81,7 +127,11 @@ body {
 }
 
 .quiz-header {
-    padding: 4rem;
+    padding: 2rem;
+}
+
+.answer {
+  padding-top: 1.5rem;
 }
 
 h2 {
@@ -102,7 +152,7 @@ ul li label {
     cursor: pointer;
 }
 
-button {
+.button-exam {
     background-color: #8e44ad;
     border: none;
     color: white;
@@ -114,7 +164,7 @@ button {
     padding: 1.3rem;
 }
 
-button:hover {
+.button-exam:hover {
     background-color: #732d91;
 }
 </style>
