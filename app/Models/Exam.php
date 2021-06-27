@@ -9,10 +9,6 @@ class Exam extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'score',
-    ];
-
     public function users()
     {
         return $this->belongsToMany(User::class);
