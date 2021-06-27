@@ -13,13 +13,14 @@ class CreateUserExamTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_exam', function (Blueprint $table) {
+        Schema::create('exam_user', function (Blueprint $table) {
             $table->integer('user_id')->unsigned();
             $table->integer('exam_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')
                 ->onDelete('cascade');
             $table->foreign('exam_id')->references('id')->on('exams')
                 ->onDelete('cascade');
+            $table->float('score')->nullable();
         });
     }
 
@@ -30,6 +31,6 @@ class CreateUserExamTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_exam');
+        Schema::dropIfExists('exam_user');
     }
 }
