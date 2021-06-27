@@ -22,11 +22,7 @@ class ExamSeeder extends Seeder
             ->each(
                 function ($user) {
                     $user->exams()->saveMany(
-                        Exam::factory(4)->make(
-                            [
-                                'user_id' => $user->id,
-                            ]
-                        )
+                        Exam::factory(4)->make()
                     );
 
                     $user->exams()->each(
@@ -56,5 +52,29 @@ class ExamSeeder extends Seeder
                     );
                 }
             );
+
+        $new_exam = Exam::factory()->create();
+        $new_category = Category::factory()->create();
+        $new_exam->questions()->saveMany(
+            Question::factory(5)
+                ->make(
+                    [
+                        'exam_id' => $new_exam->id,
+                        'category_id' => $new_category->id,
+                    ]
+                )
+        );
+        $new_exam->questions()->each(
+            function ($question) {
+                $question->choices()->saveMany(
+                    Choice::factory(5)->make(
+                        [
+                            'question_id' => $question->id,
+                        ]
+                    )
+                );
+            }
+        );
+
     }
 }
