@@ -22,7 +22,7 @@ class ExamFactory extends Factory
     public function definition()
     {
         return [
-            'score' => $this->faker->numberBetween(0, 10),
+            // 'score' => $this->faker->numberBetween(0, 10),
         ];
     }
 }
