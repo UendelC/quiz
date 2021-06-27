@@ -16,6 +16,7 @@ class ExamResource extends JsonResource
     {
         return [
             'questions' => QuestionResource::collection($this->questions),
+            'exam_id' => $this->id,
         ];
     }
 }
