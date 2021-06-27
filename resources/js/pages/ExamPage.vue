@@ -50,7 +50,8 @@ export default {
             id: '',
             description: ''
           }
-        }
+        },
+        exam_id: '',
       },
       questionIndex: 0,
       selected: [],
@@ -94,7 +95,14 @@ export default {
       this.valid = this.selected.length === 1;
       const finalQuestion = this.advanceQuestion();
       if (finalQuestion) {
-        console.log('enviar para a api '+this.selected);
+        axios.post('api/take-exam', {
+          headers: {
+            Authorization: 'Bearer ' + token
+          }
+        })
+        .then( response => {
+          this.exam = response.data.data;
+        });
       }
     }
   },
