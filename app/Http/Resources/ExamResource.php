@@ -15,8 +15,13 @@ class ExamResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'questions' => QuestionResource::collection($this->questions),
             'exam_id' => $this->id,
+            $this->mergeWhen(
+                $this->has('questions'),
+                [
+                    'questions' => QuestionResource::collection($this->questions),
+                ]
+            ),
         ];
     }
 }

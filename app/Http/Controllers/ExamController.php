@@ -79,16 +79,15 @@ class ExamController extends Controller
         $score = Choice::whereIn('id', $answers)->where('is_right', true)->count();
         $user->exams()->attach($exam_id);
 
-        $pivotTable = $user->exams()->latest()->first()->pivot;
-        $pivotTable->score = $score;
+        $pivotTable = $user->exams()->find($exam_id)->pivot;
+        $amount_of_questions = Exam::find($exam_id)->questions()->count();
+        $pivotTable->score = $score/$amount_of_questions;
         $pivotTable->save();
 
-        dump($pivotTable);
         return response()->json(
             [
                 'status' => 'ok',
-                'answers' => $answers,
-                'exam_id' => $exam_id
+                'score' => $pivotTable->score,
             ]
         );
 

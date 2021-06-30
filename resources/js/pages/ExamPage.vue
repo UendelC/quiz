@@ -1,11 +1,11 @@
 <template>
   <div>
     <nav-bar></nav-bar>
-    <div class="row justify-content-center">
-      <div class="quiz-container">
-          <b-form @submit="handleSubmit" v-if="exam.questions[questionIndex]">
+    <div class="row justify-content-center pt-3">
+      <div class="quiz-container" v-if="exam.questions.length > 0">
+          <b-form @submit="handleSubmit">
             <div class="quiz-header">
-              <h2>{{ exam.questions[questionIndex].title }}</h2>
+              <h2>{{ title }}</h2>
               <b-form-checkbox-group
                 v-model="selected"
                 :options="options"
@@ -20,6 +20,15 @@
             </div>
             <b-button type="submit" class="button-exam">Submit</b-button>
           </b-form>
+      </div>
+      <div v-else-if="!loading">
+        <cds-empty-state
+          empty-state-image="assets/univasf_logo.jpg"
+          title="Não há provas cadastradas"
+          text="Para sair dessa situação de empty state, realize a ação abaixo"
+          :show-action-button="false"
+          img-description="Imagem de que não há vagas"
+        />
       </div>
     </div>
   </div>
@@ -37,6 +46,7 @@ export default {
   },
 
   created() {
+    this.loading = true;
     this.getExam();
   },
 
@@ -56,12 +66,18 @@ export default {
       questionIndex: 0,
       selected: [],
       valid: null,
+      answers: [],
+      loading: '',
     }
   },
 
   computed: {
     options() {
       return this.exam.questions[this.questionIndex].choices.map( item => { return {text: item.description, value: item.id} });
+    },
+
+    title() {
+      return this.exam.questions.length > 0 ? this.exam.questions[this.questionIndex].title : '';
     }
   },
 
@@ -73,6 +89,7 @@ export default {
           }
         })
         .then( response => {
+          this.loading = false;
           this.exam = response.data.data;
         });
     },
@@ -82,6 +99,8 @@ export default {
     },
 
     advanceQuestion() {
+      this.answers.push(this.selected.pop());
+      this.valid = null;
       if (this.questionIndex < this.exam.questions.length - 1) {
         this.questionIndex++;
         return false;
@@ -93,15 +112,22 @@ export default {
     handleSubmit(event) {
       event.preventDefault();
       this.valid = this.selected.length === 1;
-      const finalQuestion = this.advanceQuestion();
+      let finalQuestion = false;
+      if (this.valid) {
+        finalQuestion = this.advanceQuestion();
+      }
       if (finalQuestion) {
         axios.post('api/take-exam', {
           headers: {
             Authorization: 'Bearer ' + token
-          }
-        })
+          },
+          exam_id: this.exam.exam_id,
+          answers: this.answers,
+        }
+        )
         .then( response => {
-          this.exam = response.data.data;
+          this.valid = true;
+          alert(response.data.score);
         });
       }
     }
