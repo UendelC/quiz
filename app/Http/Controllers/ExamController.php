@@ -76,20 +76,58 @@ class ExamController extends Controller
 
         $user = auth()->user();
 
-        $score = Choice::whereIn('id', $answers)->where('is_right', true)->count();
-        $user->exams()->attach($exam_id);
+        if ($user->exams()->find($exam_id)) {
+            return response()->json(
+                [
+                    'status' => 'exame já enviado',
+                ]
+            );
+        }
 
-        $pivotTable = $user->exams()->find($exam_id)->pivot;
+        $score = Choice::whereIn('id', $answers)->where('is_right', true)->count();
         $amount_of_questions = Exam::find($exam_id)->questions()->count();
-        $pivotTable->score = $score/$amount_of_questions;
-        $pivotTable->save();
+
+        $grade = $score/$amount_of_questions;
+
+        $user->exams()->attach(
+            $exam_id,
+            [
+                'score' => $grade,
+            ]
+        );
 
         return response()->json(
             [
                 'status' => 'ok',
-                'score' => $pivotTable->score,
+                'score' => $user->exams()->find($exam_id)->pivot
             ]
         );
 
+    }
+
+    public function grades()
+    {
+        $user = auth()->user();
+
+        $exams = $user
+            ->exams()
+            ->get(
+                [
+                    'created_at',
+                ]
+            )
+            ->map(
+                function ($exam) {
+                    $exam->score = $exam->pivot->score;
+                    unset($exam->pivot);
+                    return $exam;
+                }
+            );
+
+        return response()->json(
+            [
+                'exams' => $exams,
+            ]
+        );
     }
 }
