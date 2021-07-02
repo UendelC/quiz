@@ -2,7 +2,7 @@
   <div>
     <nav-bar></nav-bar>
     <div class="row justify-content-center pt-3">
-      <div class="quiz-container" v-if="exam.questions.length > 0">
+      <div class="quiz-container" v-if="exam.questions.length > 0 && !dismissAlert">
           <b-form @submit="handleSubmit">
             <div class="quiz-header">
               <h2>{{ title }}</h2>
@@ -21,7 +21,7 @@
             <b-button type="submit" class="button-exam">Submit</b-button>
           </b-form>
       </div>
-      <div v-else-if="!loading">
+      <div v-else-if="!loading && !dismissAlert">
         <cds-empty-state
           empty-state-image="assets/univasf_logo.jpg"
           title="Não há provas cadastradas"
@@ -29,6 +29,22 @@
           :show-action-button="false"
           img-description="Imagem de que não há vagas"
         />
+      </div>
+      <div class="container">
+        <div class="justify-content-center pt-3">
+          <b-alert :show="dismissAlert" variant="success" fade>
+            <h4 class="alert-heading">Well done!</h4>
+            <p>
+              Aww yeah, you successfully read this important alert message. This example text is going to
+              run a bit longer so that you can see how spacing within an alert works with this kind of
+              content.
+            </p>
+            <hr>
+            <p class="mb-0">
+              Whenever you need to, be sure to use margin utilities to keep things nice and tidy.
+            </p>
+          </b-alert>
+        </div>
       </div>
     </div>
   </div>
@@ -68,6 +84,7 @@ export default {
       valid: null,
       answers: [],
       loading: '',
+      dismissAlert: false,
     }
   },
 
@@ -127,7 +144,7 @@ export default {
         )
         .then( response => {
           this.valid = true;
-          alert(response.data.score);
+          this.dismissAlert = true;
         });
       }
     }
@@ -156,7 +173,7 @@ body-component {
     border-radius: 10px;
     box-shadow: 0 0 10px 2px rgba(100, 100, 100, 0.1);
     overflow: hidden;
-    width: 600px;
+    width: 750px;
     max-width: 100%;
 }
 

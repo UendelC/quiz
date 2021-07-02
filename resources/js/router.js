@@ -8,6 +8,7 @@ import Guard from './service/middleware';
 import RegisterInfoPage from './pages/RegisterInfoPage';
 import Report from './pages/StatisticsPage';
 import ExamPage from './pages/ExamPage';
+import StudentGrade from './pages/StudentGrade';
 
 Vue.use(VueRouter);
 
@@ -49,6 +50,11 @@ export default new VueRouter({
 			path: '/exam',
 			name: 'exam',
 			component: ExamPage,
+		},
+		{
+			path: '/student-grades',
+			name: 'grades',
+			component: StudentGrade,
 		}
 
 	],

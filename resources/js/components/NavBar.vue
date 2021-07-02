@@ -13,7 +13,7 @@
 
       <b-navbar-nav v-if="user.type==='participant'">
         <b-nav-item @click="handleExam()">Realizar Prova</b-nav-item>
-        <b-nav-item>Boletim</b-nav-item>
+        <b-nav-item @click="handleGrade()">Boletim</b-nav-item>
       </b-navbar-nav>
 
       <!-- Right aligned nav items -->
@@ -73,6 +73,10 @@
 
       handleExam() {
         this.$router.push({name: 'exam'});
+      },
+
+      handleGrade() {
+        this.$router.push({name: 'grades'});
       }
     }
   }
