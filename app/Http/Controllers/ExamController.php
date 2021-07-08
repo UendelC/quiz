@@ -8,6 +8,7 @@ use App\Models\Choice;
 use App\Models\Exam;
 use App\Models\Question;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ExamController extends Controller
@@ -87,7 +88,7 @@ class ExamController extends Controller
         $score = Choice::whereIn('id', $answers)->where('is_right', true)->count();
         $amount_of_questions = Exam::find($exam_id)->questions()->count();
 
-        $grade = $score/$amount_of_questions;
+        $grade = ($score/$amount_of_questions) * 10;
 
         $user->exams()->attach(
             $exam_id,
@@ -119,6 +120,7 @@ class ExamController extends Controller
             ->map(
                 function ($exam) {
                     $exam->score = $exam->pivot->score;
+                    $exam->date = $exam->created_at->format('d/m/Y');
                     unset($exam->pivot);
                     return $exam;
                 }

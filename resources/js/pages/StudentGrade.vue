@@ -9,7 +9,14 @@
         :fields="fields"
         bordered
         sticky-header
-      ></b-table>
+        :busy="loading"
+        show-empty
+        empty-text="Não há avaliações"
+      >
+        <template #empty="scope">
+          <h4>{{ scope.emptyText }}</h4>
+        </template>
+      </b-table>
     </div>
   </div>
 </template>
@@ -32,10 +39,11 @@ export default {
 
   data() {
     return {
+      loading: true,
       items: [],
       fields: [
           {
-            key: 'created_at',
+            key: 'date',
             label: 'Data',
             sortable: true
           },
