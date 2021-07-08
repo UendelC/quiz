@@ -4,9 +4,11 @@
     <section class="section">
         <div class="container text-center">
             <img alt="Univasf Logo" class="" src="https://portais.univasf.edu.br/imagens-noticias/MarcaUnivasfCompletaComfundo.jpg">
-            <h1><strong>Trabalho apresentado à Universidade Federal do Vale do São Francisco - UNIVASF, Campus Juazeiro, como requisito para obtenção do título de Bacharel em Engenharia da Computação.</strong></h1>
-            <p>Aluno: Uendel Luiz Neto Couto da Silva</p>
-            <p>Orientador: Brauliro Gonçalves Leal</p>
+            <h1 class="title"><strong>Trabalho apresentado à Universidade Federal do Vale do São Francisco - UNIVASF, Campus Juazeiro, como requisito para obtenção do título de Bacharel em Engenharia da Computação.</strong></h1>
+            <div class="body-text">
+              <p>Aluno: Uendel Luiz Neto Couto da Silva</p>
+              <p>Orientador: Brauliro Gonçalves Leal</p>
+            </div>
 
         </div>
     </section>
@@ -21,8 +23,21 @@ export default {
   }
 }
 </script>
-<style>
+<style scoper>
   img {
     margin: 0 auto;
+    width: 300px;
   }
+
+  .title {
+    padding: 50px 0;
+    font-size: 25px;
+    text-align: justify;
+  }
+
+  .body-text {
+    padding: 30px 0;
+  }
+
+
 </style>
