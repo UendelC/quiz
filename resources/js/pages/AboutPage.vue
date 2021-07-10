@@ -37,6 +37,8 @@ export default {
 
   .body-text {
     padding: 30px 0;
+    font-size: 20px;
+    text-align: center;
   }
 
 
