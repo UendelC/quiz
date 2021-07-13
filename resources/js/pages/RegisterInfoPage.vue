@@ -81,7 +81,8 @@ const token = Cookie.getToken();
         event.preventDefault()
 
         if (this.form.choices.length <= 1) {
-          alert('Você deve cadastrar ao menos duas alternativas');
+          this.$swal('Você deve cadastrar ao menos duas alternativas');
+          // alert('Você deve cadastrar ao menos duas alternativas');
         }
 
         if (this.form.choices.some(item => item.description.length === 0)) {

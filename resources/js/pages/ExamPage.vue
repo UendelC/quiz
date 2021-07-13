@@ -33,15 +33,13 @@
       <div class="container">
         <div class="justify-content-center pt-3">
           <b-alert :show="dismissAlert" variant="success" fade>
-            <h4 class="alert-heading">Well done!</h4>
+            <h4 class="alert-heading">Parabéns!</h4>
             <p>
-              Aww yeah, you successfully read this important alert message. This example text is going to
-              run a bit longer so that you can see how spacing within an alert works with this kind of
-              content.
+              Você finalizou a avaliação, em breve sua nota estará disponível na aba de <a href="/student-grades">boletim</a>.
             </p>
             <hr>
             <p class="mb-0">
-              Whenever you need to, be sure to use margin utilities to keep things nice and tidy.
+              Novas Provas estarão disponíveis em Realizar exame.
             </p>
           </b-alert>
         </div>
