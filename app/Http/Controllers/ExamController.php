@@ -10,6 +10,7 @@ use App\Models\Question;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Revolution\Google\Sheets\Facades\Sheets;
 
 class ExamController extends Controller
 {
@@ -24,36 +25,31 @@ class ExamController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate(
-            [
-                'category' => 'required',
-                'question' => 'required',
-                'explanation' => 'required',
-                'choices' => 'required'
-            ]
-        );
+        $questions = $request->questions;
 
         $exam = Exam::create();
 
-        $category = Category::findOrFail($request['category']);
+        foreach ($questions as $question) {
+            $category = Category::findOrFail($question['category']);
 
-        $question = Question::create(
-            [
-                'title' => $request['question'],
-                'explanation' => $request['explanation'],
-                'exam_id' => $exam->id,
-                'category_id' => $category->id,
-            ]
-        );
-
-        foreach ($request['choices'] as $choice) {
-            Choice::create(
+            $question = Question::create(
                 [
-                    'question_id' => $question->id,
-                    'description' => $choice['description'],
-                    'is_right' => $choice['is_right'],
+                    'title' => $question['question'],
+                    'explanation' => $question['explanation'],
+                    'exam_id' => $exam->id,
+                    'category_id' => $category->id,
                 ]
             );
+
+            foreach ($question['choices'] as $choice) {
+                Choice::create(
+                    [
+                        'question_id' => $question->id,
+                        'description' => $choice['description'],
+                        'is_right' => $choice['is_right'],
+                    ]
+                );
+            }
         }
 
         return response()->json(
@@ -96,6 +92,9 @@ class ExamController extends Controller
                 'score' => $grade,
             ]
         );
+
+        Sheets::spreadsheet('1SRGZH4PaHn-w52GI1ZwdTCJsjVLundz4rPN4A66k4Yg')
+            ->append([['1'=> 'teste','2' => 'uendel']]);
 
         return response()->json(
             [

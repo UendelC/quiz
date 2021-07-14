@@ -8,13 +8,13 @@
         label="Categoria:"
         label-for="input-1"
       >
-        <b-form-select v-model="form.category" :options="options"></b-form-select>
+        <b-form-select v-model="currentQuestion.category" :options="options"></b-form-select>
       </b-form-group>
 
       <b-form-group id="input-group-2" label="Enunciado da Questão:" label-for="input-2">
         <b-form-input
           id="input-2"
-          v-model="form.question"
+          v-model="currentQuestion.question"
           placeholder="Digite o enunciado"
           required
         ></b-form-input>
@@ -23,14 +23,14 @@
       <b-form-group id="input-group-3" label="Explicação da Questão:" label-for="input-3">
         <b-form-input
           id="input-3"
-          v-model="form.explanation"
+          v-model="currentQuestion.explanation"
           placeholder="Explicação da questão"
           required
         ></b-form-input>
       </b-form-group>
 
       <b-form-group id="input-group-4" label="Alternativas:" label-for="input-4">
-        <div v-for="(choice, index) in form.choices" :key="index">
+        <div v-for="(choice, index) in currentQuestion.choices" :key="index">
           <b-form-group label="Opção:">
             <b-form-input v-model="choice.description"></b-form-input>
             <b-form-checkbox v-model="choice.is_right">Marque se a opção for a correta</b-form-checkbox>
@@ -40,7 +40,8 @@
         <b-button @click="addChoiceField()">Adicionar Alternativa</b-button>
       </b-form-group>
 
-      <b-button type="submit" variant="primary">Submit</b-button>
+      <b-button @click="addNewQuestion()">Cadastrar próxima questão</b-button>
+      <b-button type="submit" variant="primary">Finalizar Cadastro de Avaliação</b-button>
       <b-button type="reset" variant="danger">Reset</b-button>
     </b-form>
   </div>
@@ -58,6 +59,13 @@ const token = Cookie.getToken();
     data() {
       return {
         form: {
+          questions: [],
+          // category: '',
+          // question: '',
+          // explanation: '',
+          // choices: [],
+        },
+        currentQuestion: {
           category: '',
           question: '',
           explanation: '',
@@ -65,6 +73,7 @@ const token = Cookie.getToken();
         },
         show: true,
         options: [],
+        exam: [],
       }
     },
 
@@ -79,21 +88,61 @@ const token = Cookie.getToken();
     methods: {
       onSubmit(event) {
         event.preventDefault();
+        
+        let aux = Object.assign({}, this.currentQuestion);
+        this.form.questions.push(aux);
+
+        if (this.form.questions.length >= 1) {
+          axios.post('api/exams', this.form, {
+            headers: {
+              Authorization: 'Bearer ' + token
+            }
+          }).then( response => {
+            this.$swal('Pergunta cadastrada com sucesso');
+            this.resetForm();
+            this.form.questions = [];
+          });
+        }
+      },
+
+      onReset(event) {
+        event.preventDefault()
+        this.resetForm();
+      },
+
+      resetForm() {
+        this.currentQuestion.category = ''
+        this.currentQuestion.question = ''
+        this.currentQuestion.explanation = null
+        this.currentQuestion.choices = [];
+        // Trick to reset/clear native browser form validation state
+        this.show = false
+        this.$nextTick(() => {
+          this.show = true
+        })
+      },
+
+      addChoiceField() {
+        this.currentQuestion.choices.push({
+          is_right: false,
+          description: '',
+        });
+      },
+
+      addNewQuestion() {
         let fail = false;
 
-        if (this.form.choices.length <= 1) {
+        if (this.currentQuestion.choices.length <= 1) {
           this.$swal('Você deve cadastrar ao menos duas alternativas');
           fail = true;
         }
 
-        console.log(this.form.choices.length);
-
-        if (this.form.choices.some(item => item.description.length === 0)) {
+        if (this.currentQuestion.choices.some(item => item.description.length === 0)) {
           this.$swal('Todas as alternativas devem ter seus textos');
           fail = true;
         }
 
-        const amountOfRightChoices = this.form.choices.reduce((accumulator, currentValue) => {
+        const amountOfRightChoices = this.currentQuestion.choices.reduce((accumulator, currentValue) => {
           return accumulator + (currentValue.is_right ? 1 : 0);
           }, 0
         );
@@ -109,43 +158,14 @@ const token = Cookie.getToken();
         }
 
         if (!fail) {
-          axios.post('api/exams', this.form, {
-            headers: {
-              Authorization: 'Bearer ' + token
-            }
-          }).then( response => {
-            this.$swal('Pergunta cadastrada com sucesso');
-            this.resetForm();
-          });
+          let aux = Object.assign({}, this.currentQuestion);
+          this.form.questions.push(aux);
+          this.resetForm();
         }
       },
 
-      onReset(event) {
-        event.preventDefault()
-        this.resetForm();
-      },
-
-      resetForm() {
-        this.form.category = ''
-        this.form.question = ''
-        this.form.explanation = null
-        this.form.choices = [];
-        // Trick to reset/clear native browser form validation state
-        this.show = false
-        this.$nextTick(() => {
-          this.show = true
-        })
-      },
-
-      addChoiceField() {
-        this.form.choices.push({
-          is_right: false,
-          description: '',
-        });
-      },
-
       removeChoice(index) {
-        this.form.choices.splice(index, 1);
+        this.currentQuestion.choices.splice(index, 1);
       },
 
       getCategories() {
