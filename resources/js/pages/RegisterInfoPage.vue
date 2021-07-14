@@ -78,15 +78,19 @@ const token = Cookie.getToken();
 
     methods: {
       onSubmit(event) {
-        event.preventDefault()
+        event.preventDefault();
+        let fail = false;
 
         if (this.form.choices.length <= 1) {
           this.$swal('Você deve cadastrar ao menos duas alternativas');
-          // alert('Você deve cadastrar ao menos duas alternativas');
+          fail = true;
         }
 
+        console.log(this.form.choices.length);
+
         if (this.form.choices.some(item => item.description.length === 0)) {
-          alert('todas as alternativas devem ter seus textos');
+          this.$swal('Todas as alternativas devem ter seus textos');
+          fail = true;
         }
 
         const amountOfRightChoices = this.form.choices.reduce((accumulator, currentValue) => {
@@ -95,26 +99,29 @@ const token = Cookie.getToken();
         );
 
         if (amountOfRightChoices === 0) {
-          alert('Ao menos uma alternativa deve estar correta');
+          this.$swal('Ao menos uma alternativa deve estar correta');
+          fail = true;
         }
 
         if (amountOfRightChoices > 1) {
-          alert('Apenas uma alternativa deve ser correta');
+          this.$swal('Apenas uma alternativa deve ser correta');
+          fail = true;
         }
 
-        axios.post('api/exams', this.form, {
-          headers: {
-            Authorization: 'Bearer ' + token
-          }
-        }).then( response => {
-          alert('Pergunta cadastrada com sucesso');
-          this.resetForm();
-        });
+        if (!fail) {
+          axios.post('api/exams', this.form, {
+            headers: {
+              Authorization: 'Bearer ' + token
+            }
+          }).then( response => {
+            this.$swal('Pergunta cadastrada com sucesso');
+            this.resetForm();
+          });
+        }
       },
 
       onReset(event) {
         event.preventDefault()
-        // Reset our form values
         this.resetForm();
       },
 
