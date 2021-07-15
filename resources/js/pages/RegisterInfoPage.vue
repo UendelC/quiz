@@ -7,8 +7,15 @@
         id="input-group-1"
         label="Categoria:"
         label-for="input-1"
+        v-if="showCategory"
       >
-        <b-form-select v-model="currentQuestion.category" :options="options"></b-form-select>
+          <b-form-select
+            :plain="true"
+            placeholder="Selecione uma categoria"
+            v-model="form.category"
+            :options="options"
+          >
+          </b-form-select>
       </b-form-group>
 
       <b-form-group id="input-group-2" label="Enunciado da Questão:" label-for="input-2">
@@ -59,6 +66,7 @@ const token = Cookie.getToken();
     data() {
       return {
         form: {
+          category: '',
           questions: [],
           // category: '',
           // question: '',
@@ -66,12 +74,12 @@ const token = Cookie.getToken();
           // choices: [],
         },
         currentQuestion: {
-          category: '',
           question: '',
           explanation: '',
           choices: [],
         },
         show: true,
+        showCategory: true,
         options: [],
         exam: [],
       }
@@ -88,7 +96,11 @@ const token = Cookie.getToken();
     methods: {
       onSubmit(event) {
         event.preventDefault();
-        
+
+        if (this.form.category) {
+          this.showCategory = false;
+        }
+
         let aux = Object.assign({}, this.currentQuestion);
         this.form.questions.push(aux);
 
@@ -111,8 +123,7 @@ const token = Cookie.getToken();
       },
 
       resetForm() {
-        this.currentQuestion.category = ''
-        this.currentQuestion.question = ''
+        this.currentQuestion.question = '';
         this.currentQuestion.explanation = null
         this.currentQuestion.choices = [];
         // Trick to reset/clear native browser form validation state
@@ -131,6 +142,10 @@ const token = Cookie.getToken();
 
       addNewQuestion() {
         let fail = false;
+
+        if (this.form.category) {
+          this.showCategory = false;
+        }
 
         if (this.currentQuestion.choices.length <= 1) {
           this.$swal('Você deve cadastrar ao menos duas alternativas');

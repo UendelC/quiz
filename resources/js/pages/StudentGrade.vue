@@ -43,6 +43,11 @@ export default {
       items: [],
       fields: [
           {
+            key: 'category_name',
+            label: 'Categoria',
+            sortable: true,
+          },
+          {
             key: 'date',
             label: 'Data',
             sortable: true

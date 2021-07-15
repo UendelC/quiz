@@ -18,8 +18,11 @@
                 <b-form-valid-feedback :state="valid">Resposta cadastrada com sucesso!</b-form-valid-feedback>
               </b-form-checkbox-group>
             </div>
-            <b-button type="submit" class="button-exam">Submit</b-button>
+            <b-button type="submit" class="button-exam" :disabled="processExam">Responder</b-button>
           </b-form>
+          <div class="text-center" v-if="processExam">
+            <b-spinner variant="primary" label="Text Centered"></b-spinner>
+          </div>
       </div>
       <div v-else-if="!loading && !dismissAlert">
         <cds-empty-state
@@ -83,6 +86,7 @@ export default {
       answers: [],
       loading: '',
       dismissAlert: false,
+      processExam: false,
     }
   },
 
@@ -132,6 +136,7 @@ export default {
         finalQuestion = this.advanceQuestion();
       }
       if (finalQuestion) {
+        this.processExam = true;
         axios.post('api/take-exam', {
           headers: {
             Authorization: 'Bearer ' + token
@@ -143,6 +148,7 @@ export default {
         .then( response => {
           this.valid = true;
           this.dismissAlert = true;
+          this.processExam = false;
         });
       }
     }
