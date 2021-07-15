@@ -35,7 +35,7 @@ class ExamController extends Controller
         );
 
         foreach ($questions as $question) {
-            $question = Question::create(
+            $saved_question = Question::create(
                 [
                     'title' => $question['question'],
                     'explanation' => $question['explanation'],
@@ -46,7 +46,7 @@ class ExamController extends Controller
             foreach ($question['choices'] as $choice) {
                 Choice::create(
                     [
-                        'question_id' => $question->id,
+                        'question_id' => $saved_question->id,
                         'description' => $choice['description'],
                         'is_right' => $choice['is_right'],
                     ]
@@ -100,7 +100,7 @@ class ExamController extends Controller
         $data[] = [
             'Topico' => $exam->category->name,
             'participante' => $user->name,
-            'Nota' => $score,
+            'Nota' => $grade,
             'date' => $exam->created_at->format('d/m/Y'),
         ];
 
@@ -111,7 +111,7 @@ class ExamController extends Controller
         return response()->json(
             [
                 'status' => 'ok',
-                'score' => $score,
+                'score' => $grade,
             ]
         );
 
@@ -123,15 +123,13 @@ class ExamController extends Controller
 
         $exams = $user
             ->exams()
-            ->get(
-                [
-                    'created_at',
-                ]
-            )
+            ->with('category')
+            ->get()
             ->map(
                 function ($exam) {
                     $exam->score = $exam->pivot->score;
                     $exam->date = $exam->created_at->format('d/m/Y');
+                    $exam-> category_name = $exam->category->name;
                     unset($exam->pivot);
                     return $exam;
                 }
