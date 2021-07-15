@@ -18,4 +18,9 @@ class Exam extends Model
     {
         return $this->hasMany(Question::class);
     }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 }

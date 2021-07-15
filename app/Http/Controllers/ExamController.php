@@ -26,18 +26,20 @@ class ExamController extends Controller
     public function store(Request $request)
     {
         $questions = $request->questions;
+        $category = Category::findOrFail($request->category);
 
-        $exam = Exam::create();
+        $exam = Exam::create(
+            [
+                'category_id' => $category->id,
+            ]
+        );
 
         foreach ($questions as $question) {
-            $category = Category::findOrFail($question['category']);
-
             $question = Question::create(
                 [
                     'title' => $question['question'],
                     'explanation' => $question['explanation'],
                     'exam_id' => $exam->id,
-                    'category_id' => $category->id,
                 ]
             );
 
@@ -96,6 +98,7 @@ class ExamController extends Controller
         $exam = Exam::find($exam_id);
 
         $data[] = [
+            'Topico' => $exam->category->name,
             'participante' => $user->name,
             'Nota' => $score,
             'date' => $exam->created_at->format('d/m/Y'),
