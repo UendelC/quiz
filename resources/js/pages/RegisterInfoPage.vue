@@ -9,13 +9,12 @@
         label-for="input-1"
         v-if="showCategory"
       >
-          <b-form-select
-            :plain="true"
-            placeholder="Selecione uma categoria"
-            v-model="form.category"
-            :options="options"
-          >
-          </b-form-select>
+        <b-form-select
+          :plain="true"
+          v-model="form.category"
+          :options="options"
+        >
+        </b-form-select>
       </b-form-group>
 
       <b-form-group id="input-group-2" label="Enunciado da Questão:" label-for="input-2">
@@ -80,7 +79,10 @@ const token = Cookie.getToken();
         },
         show: true,
         showCategory: true,
-        options: [],
+        options: [{
+          value: '',
+          text: 'Selecione uma categoria',
+        }],
         exam: [],
       }
     },
@@ -189,9 +191,11 @@ const token = Cookie.getToken();
             Authorization: 'Bearer ' + token
           }
         }).then( response => {
-          this.options = response.data.data.map(item => {
+          let categories = response.data.data.map(item => {
             return { text: item.name, value: item.id};
           });
+
+          this.options = [...this.options, ...categories];
         });
       }
     }
