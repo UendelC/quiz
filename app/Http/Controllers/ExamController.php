@@ -93,13 +93,22 @@ class ExamController extends Controller
             ]
         );
 
+        $exam = Exam::find($exam_id);
+
+        $data[] = [
+            'participante' => $user->name,
+            'Nota' => $score,
+            'date' => $exam->created_at->format('d/m/Y'),
+        ];
+
         Sheets::spreadsheet('1SRGZH4PaHn-w52GI1ZwdTCJsjVLundz4rPN4A66k4Yg')
-            ->append([['1'=> 'teste','2' => 'uendel']]);
+            ->sheet('Página3')
+            ->append($data);
 
         return response()->json(
             [
                 'status' => 'ok',
-                'score' => $user->exams()->find($exam_id)->pivot
+                'score' => $score,
             ]
         );
 
