@@ -18,7 +18,14 @@ class ExamController extends Controller
     {
         $user = auth()->user();
         $previous_exams = $user->exams()->pluck('id');
+
         $exam = Exam::whereNotIn('id', $previous_exams)->latest()->first();
+
+        if (!isset($exam)) {
+            return [
+                'message' => 'No exams available',
+            ];
+        }
 
         return new ExamResource($exam);
     }

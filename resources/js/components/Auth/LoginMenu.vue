@@ -145,7 +145,6 @@
 			},
 
 			registerHandler() {
-				console.log('teste');
 				this.$router.push({name: 'register'});
 			}
 		}

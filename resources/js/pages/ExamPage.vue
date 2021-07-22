@@ -24,7 +24,7 @@
             <b-spinner variant="primary" label="Text Centered"></b-spinner>
           </div>
       </div>
-      <div v-else-if="!loading && !dismissAlert">
+      <div v-else-if="!loading && !dismissAlert || noExams">
         <cds-empty-state
           empty-state-image="assets/univasf_logo.jpg"
           title="Não há provas cadastradas"
@@ -87,6 +87,7 @@ export default {
       loading: '',
       dismissAlert: false,
       processExam: false,
+      noExams: false,
     }
   },
 
@@ -108,8 +109,12 @@ export default {
           }
         })
         .then( response => {
-          this.loading = false;
-          this.exam = response.data.data;
+          if (response.data.message) {
+            this.noExams = true;
+          } else {
+            this.loading = false;
+            this.exam = response.data.data;
+          }
         });
     },
 

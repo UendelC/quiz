@@ -115,7 +115,6 @@ export default {
 
 	methods: {
 		async register() {
-			console.log('teste');
 			const validator = await this.$refs.registerForm.validate();
 			if (!validator) {return;}
 
