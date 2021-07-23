@@ -9,12 +9,24 @@
         label-for="input-1"
         v-if="showCategory"
       >
-        <b-form-select
-          :plain="true"
-          v-model="form.category"
-          :options="options"
-        >
-        </b-form-select>
+        <b-form-group>
+          <b-form-select
+            :plain="true"
+            v-model="form.category"
+            :options="options"
+          >
+          </b-form-select>
+          <b-button v-b-modal.modal-categoria>
+            Cadastrar nova categoria
+          </b-button>
+
+          <b-modal id="modal-categoria" title="Cadastre uma nova categoria">
+            <b-form-group label="Nome da categoria">
+              <b-form-input v-model="form.category.text" placeholder="Digite uma categoria">
+              </b-form-input>
+            </b-form-group>
+          </b-modal>
+        </b-form-group>
       </b-form-group>
 
       <b-form-group id="input-group-2" label="Enunciado da Questão:" label-for="input-2">
@@ -65,7 +77,10 @@ const token = Cookie.getToken();
     data() {
       return {
         form: {
-          category: '',
+          category: {
+            text: '',
+            value: null,
+          },
           questions: [],
           // category: '',
           // question: '',

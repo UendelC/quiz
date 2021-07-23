@@ -33,7 +33,16 @@ class ExamController extends Controller
     public function store(Request $request)
     {
         $questions = $request->questions;
-        $category = Category::findOrFail($request->category);
+
+        if (is_array($request->category) && $request->category['value'] === null) {
+            $category = Category::create(
+                [
+                    'name' => $request->category['text'],
+                ]
+            );
+        } else {
+            $category = Category::findOrFail($request->category);
+        }
 
         $exam = Exam::create(
             [
@@ -93,7 +102,7 @@ class ExamController extends Controller
         $score = Choice::whereIn('id', $answers)->where('is_right', true)->count();
         $amount_of_questions = Exam::find($exam_id)->questions()->count();
 
-        $grade = ($score/$amount_of_questions) * 10;
+        $grade = ($score / $amount_of_questions) * 10;
 
         $user->exams()->attach(
             $exam_id,
@@ -121,7 +130,6 @@ class ExamController extends Controller
                 'score' => $grade,
             ]
         );
-
     }
 
     public function grades()
@@ -136,7 +144,7 @@ class ExamController extends Controller
                 function ($exam) {
                     $exam->score = $exam->pivot->score;
                     $exam->date = $exam->created_at->format('d/m/Y');
-                    $exam-> category_name = $exam->category->name;
+                    $exam->category_name = $exam->category->name;
                     unset($exam->pivot);
                     return $exam;
                 }
