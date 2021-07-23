@@ -28,7 +28,7 @@
         <cds-empty-state
           empty-state-image="assets/univasf_logo.jpg"
           title="Não há provas cadastradas"
-          text="Para sair dessa situação de empty state, realize a ação abaixo"
+          text="Novas provas aparecerão aqui assim que habilitadas pelo professor"
           :show-action-button="false"
           img-description="Imagem de que não há vagas"
         />
