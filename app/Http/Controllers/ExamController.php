@@ -34,10 +34,10 @@ class ExamController extends Controller
     {
         $questions = $request->questions;
 
-        if (is_array($request->category) && $request->category['value'] === null) {
+        if (is_string($request->category)) {
             $category = Category::create(
                 [
-                    'name' => $request->category['text'],
+                    'name' => $request->category,
                 ]
             );
         } else {

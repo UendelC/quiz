@@ -10,19 +10,22 @@
         v-if="showCategory"
       >
         <b-form-group>
-          <b-form-select
-            :plain="true"
-            v-model="form.category"
-            :options="options"
-          >
-          </b-form-select>
-          <b-button v-b-modal.modal-categoria>
-            Cadastrar nova categoria
-          </b-button>
+          <b-form-row>
+            <b-form-select
+              :plain="true"
+              v-model="form.category"
+              :options="options"
+              class="mb-3"
+            >
+            </b-form-select>
+            <b-button v-b-modal.modal-categoria>
+              Cadastrar nova categoria
+            </b-button>
 
-          <b-modal id="modal-categoria" title="Cadastre uma nova categoria">
+          </b-form-row>
+          <b-modal id="modal-categoria" title="Cadastre uma nova categoria" @ok="handleOk">
             <b-form-group label="Nome da categoria">
-              <b-form-input v-model="form.category.text" placeholder="Digite uma categoria">
+              <b-form-input v-model="newCategory" placeholder="Digite uma categoria">
               </b-form-input>
             </b-form-group>
           </b-modal>
@@ -77,10 +80,7 @@ const token = Cookie.getToken();
     data() {
       return {
         form: {
-          category: {
-            text: '',
-            value: null,
-          },
+          category: '',
           questions: [],
           // category: '',
           // question: '',
@@ -99,6 +99,7 @@ const token = Cookie.getToken();
           text: 'Selecione uma categoria',
         }],
         exam: [],
+        newCategory: '',
       }
     },
 
@@ -111,6 +112,13 @@ const token = Cookie.getToken();
     },
 
     methods: {
+      handleOk() {
+        this.options.push({
+          text: this.newCategory,
+          value: this.newCategory,
+        });
+      },
+
       onSubmit(event) {
         event.preventDefault();
 
