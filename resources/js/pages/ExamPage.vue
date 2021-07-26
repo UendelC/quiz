@@ -142,7 +142,7 @@ export default {
       }
       if (finalQuestion) {
         this.processExam = true;
-        axios.post('api/take-exam', {
+        axios.post('api/takeexam', {
           headers: {
             Authorization: 'Bearer ' + token
           },
