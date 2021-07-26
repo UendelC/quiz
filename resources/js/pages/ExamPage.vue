@@ -142,13 +142,17 @@ export default {
       }
       if (finalQuestion) {
         this.processExam = true;
-        axios.post('api/takeexam', {
-          headers: {
-            Authorization: 'Bearer ' + token
+        axios.post(
+          'api/takeexam',
+          {
+            exam_id: this.exam.exam_id,
+            answers: this.answers,
           },
-          exam_id: this.exam.exam_id,
-          answers: this.answers,
-        }
+          {
+            headers: {
+              Authorization: 'Bearer ' + token
+            },
+          }
         )
         .then( response => {
           this.valid = true;
