@@ -58,7 +58,7 @@ return [
             "type" => env('type'),
             "project_id" => env('project_id'),
             "private_key_id" => env('private_key_id'),
-            "private_key" => openssl_get_privatekey(env('private_key')),
+            "private_key" => str_replace('\n', "\n", env('private_key')),
             "client_email" => env('client_email'),
             "client_id" => env('client_id'),
             "auth_uri" => env('auth_uri'),
