@@ -34,26 +34,31 @@ export default new VueRouter({
 		{
 			path: '/about',
 			name: 'about',
+			beforeEnter: Guard.redirectIfNotAuthenticated,
 			component: AboutPage,
 		},
 		{
 			path: '/register-info',
 			name: 'register-info',
+			beforeEnter: Guard.redirectIfNotAuthenticated,
 			component: RegisterInfoPage,
 		},
 		{
 			path: '/report',
 			name: 'report',
+			beforeEnter: Guard.redirectIfNotAuthenticated,
 			component: Report,
 		},
 		{
 			path: '/exam',
 			name: 'exam',
+			beforeEnter: Guard.redirectIfNotAuthenticated,
 			component: ExamPage,
 		},
 		{
 			path: '/student-grades',
 			name: 'grades',
+			beforeEnter: Guard.redirectIfNotAuthenticated,
 			component: StudentGrade,
 		}
 
