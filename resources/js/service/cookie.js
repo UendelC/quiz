@@ -8,6 +8,12 @@ export default {
 	},
 
 	getToken() {
+		if (!Cookie.get(TOKEN_NAME)) {
+			console.log('cookie nulo');
+			console.log(document.cookie);
+		} else {
+			console.log('cookie válido');
+		}
 		return Cookie.get(TOKEN_NAME);
 	},
 
