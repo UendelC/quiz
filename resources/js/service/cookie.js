@@ -8,7 +8,7 @@ export default {
 	},
 
 	getToken() {
-		if (!Cookie.get(TOKEN_NAME)) {
+		if (typeof Cookie.get(TOKEN_NAME) == 'undefined') {
 			console.log('cookie nulo');
 			console.log(document.cookie);
 		} else {
