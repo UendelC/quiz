@@ -8,8 +8,6 @@ export default {
 	},
 
 	getToken() {
-		console.log('Cookie ' + Cookie.get(TOKEN_NAME));
-		console.log('document ' + document.cookie);
 		return Cookie.get(TOKEN_NAME);
 	},
 
