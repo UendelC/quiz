@@ -26,8 +26,6 @@ import NavBar from '../components/NavBar';
 import Cookie from '../service/cookie';
 
 const token = Cookie.getToken();
-console.log('token ' + token);
-console.log('document ' + document.cookie);
 
 export default {
   components: {

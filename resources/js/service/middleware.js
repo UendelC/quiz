@@ -17,7 +17,11 @@ export default {
 		 })
 		.then((response) => {
 			if (!store?.state?.user?.id) {
-				store.commit('user/STORE_USER', response.data.data);
+				const data = {
+						user: response.data.data,
+						token,
+				};
+				store.commit('user/STORE_USER', data);
 			}
 		})
 		.catch(() => {
