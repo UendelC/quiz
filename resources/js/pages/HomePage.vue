@@ -1,17 +1,15 @@
 <template>
   <div>
     <nav-bar></nav-bar>
-    <example-component>
-    </example-component>
+    <p>O Quiz App é um aplicativo para ajudar professores e alunos a fazerem melhores exames online</p>
   </div>
 </template>
 
 <script>
-import ExampleComponent from '../components/ExampleComponent';
+
 import NavBar from '../components/NavBar';
 export default {
   components: {
-    ExampleComponent,
     NavBar
   }
 }
