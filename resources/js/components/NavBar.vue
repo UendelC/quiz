@@ -35,6 +35,7 @@
 <script>
   import Cookie from '../service/cookie';
   import { mapState } from 'vuex';
+  import store from '../store';
 
   export default {
     data: () => ({
@@ -52,6 +53,7 @@
       async logout() {
         await axios.post('api/logout');
         Cookie.deleteToken();
+        store.commit('user/CLEAR_USER');
         this.$router.push({name: 'login'});
       },
 

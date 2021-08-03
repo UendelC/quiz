@@ -26,6 +26,7 @@ export default {
 		})
 		.catch(() => {
 			Cookie.deleteToken();
+			store.commit('user/CLEAR_USER');
 			next({name: 'login'});
 		});
 

@@ -8,7 +8,11 @@ export default {
     mutations: {
         STORE_USER(state, user) {
             state.user = user;
-        }
+        },
+
+        CLEAR_USER(state) {
+            state.user = {};
+        },
     },
 
     actions: {},
