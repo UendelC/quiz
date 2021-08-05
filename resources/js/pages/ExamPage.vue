@@ -26,7 +26,7 @@
       </div>
       <div v-else-if="!loading && !dismissAlert || noExams">
         <cds-empty-state
-          empty-state-image="assets/univasf_logo.jpg"
+          empty-state-image="https://img.freepik.com/free-vector/night-robot-with-flashlight-space-signboard-404-error-cute-illustration-error-page-404-found_138353-33.jpg?size=626&ext=jpg"
           title="Não há provas cadastradas"
           text="Novas provas aparecerão aqui assim que habilitadas pelo professor"
           :show-action-button="false"
