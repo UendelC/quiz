@@ -217,7 +217,7 @@ ul li label {
 }
 
 .button-exam {
-    background-color: #8e44ad;
+    background-color: #005b96;
     border: none;
     color: white;
     display: block;
@@ -229,6 +229,6 @@ ul li label {
 }
 
 .button-exam:hover {
-    background-color: #732d91;
+    background-color: #02416b;
 }
 </style>

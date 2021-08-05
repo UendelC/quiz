@@ -1,6 +1,6 @@
 <template>
     <div class="pb-3">
-  <b-navbar toggleable="lg" type="dark" variant="info">
+  <b-navbar toggleable="lg" type="dark" variant="dark">
     <b-navbar-brand href="" @click="homeHandler()">Quiz App</b-navbar-brand>
 
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -83,3 +83,10 @@
     }
   }
 </script>
+
+<style scoped>
+  /* nav bar azul */
+  .navbar.navbar-dark.bg-dark{
+    background-color: #03396c!important;
+ }
+</style>
