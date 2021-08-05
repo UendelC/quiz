@@ -18,7 +18,7 @@ export default new VueRouter({
 			path: '/',
 			name: 'index',
 			beforeEnter: Guard.redirectIfNotAuthenticated,
-			component: HomePage,
+			component: AboutPage,
 		},
 		{
 			path: '/login',
