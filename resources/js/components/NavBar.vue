@@ -62,7 +62,7 @@
       },
 
       homeHandler() {
-        this.$router.push({name: 'index'});
+        this.$router.push({name: 'about'});
       },
 
       handleForm() {

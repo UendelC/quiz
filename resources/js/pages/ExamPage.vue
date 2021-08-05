@@ -3,7 +3,7 @@
     <nav-bar></nav-bar>
     <div class="row justify-content-center pt-3">
       <div class="quiz-container" v-if="exam.questions.length > 0 && !dismissAlert">
-          <b-form @submit="handleSubmit">
+          <b-form @submit="handleSubmit" v-if="!processExam">
             <div class="quiz-header">
               <h2>{{ title }}</h2>
               <b-form-checkbox-group

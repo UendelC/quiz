@@ -39,7 +39,7 @@ export default {
 		let n;
 
 		if (token) {
-			n = {name: 'index'};
+			n = {name: 'about'};
 		}
 
 		next(n);

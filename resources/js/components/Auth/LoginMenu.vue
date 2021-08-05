@@ -134,7 +134,7 @@
 					Cookie.setToken(token);
 
 					this.$store.commit('user/STORE_USER', response.data.data.user);
-					this.$router.push({name: 'index'});
+					this.$router.push({name: 'about'});
 				}).catch(() => {
 					this.response.color = 'red';
 					this.response.message = 'Credenciais inválidas.';
