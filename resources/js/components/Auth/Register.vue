@@ -137,6 +137,9 @@ export default {
 			}).catch(error => {
 				this.response.color = 'red';
 				this.response.message = 'Credenciais inválidas.';
+				if (error.response.data.errors.password[0] === 'The password must be at least 6 characters.') {
+					this.response.message = 'A senha cadastrada deve ter ao menos 6 caracteres';
+				}
 			});
 
 		},
