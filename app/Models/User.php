@@ -47,4 +47,14 @@ class User extends Authenticatable
 	{
 		return $this->belongsToMany(Exam::class)->withPivot('score');
 	}
+
+	public function subjects()
+	{
+		return $this->belongsToMany(Subject::class);
+	}
+
+	public function lecture()
+	{
+		return $this->hasOne(Subject::class);
+	}
 }
