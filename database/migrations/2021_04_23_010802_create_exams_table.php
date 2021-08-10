@@ -19,6 +19,10 @@ class CreateExamsTable extends Migration
             $table->foreign('category_id')
                 ->references('id')
                 ->on('categories');
+            $table->unsignedBigInteger('subject_id');
+            $table->foreign('subject_id')
+                ->references('id')
+                ->on('subjects');
             $table->timestamps();
         });
     }

@@ -55,6 +55,6 @@ class User extends Authenticatable
 
 	public function lecture()
 	{
-		return $this->hasOne(Subject::class);
+		return $this->belongsTo(Subject::class, 'id', 'teacher_id');
 	}
 }

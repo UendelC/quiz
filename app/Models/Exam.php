@@ -27,4 +27,9 @@ class Exam extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function subject()
+    {
+        return $this->belongsTo(Subject::class);
+    }
 }
