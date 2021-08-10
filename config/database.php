@@ -2,7 +2,18 @@
 
 use Illuminate\Support\Str;
 
-$DATABASE_URL = parse_url(getenv('DATABASE_URL'));
+if (env('APP_ENV') == 'production') {
+    $DATABASE_URL = parse_url(getenv('DATABASE_URL'));
+} else {
+    $DATABASE_URL = [
+        'host' => 'localhost',
+        'port' => '3306',
+        'user' => 'root',
+        'pass' => '',
+        'db' => 'laravel',
+        'path' => '/',
+    ];
+}
 
 
 return [
