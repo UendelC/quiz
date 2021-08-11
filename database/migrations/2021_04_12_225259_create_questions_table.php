@@ -15,7 +15,6 @@ class CreateQuestionsTable extends Migration
     {
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('exam_id');
             $table->string('title');
             $table->string('explanation');
             $table->timestamps();

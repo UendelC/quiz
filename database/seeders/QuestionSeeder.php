@@ -20,13 +20,9 @@ class QuestionSeeder extends Seeder
 
         $exams->each(
             function ($exam) {
-                $exam->questions()->saveMany(
+                $exam->questions()->attach(
                     [
-                        Question::factory()->make(
-                            [
-                                'exam_id' => $exam->id,
-                            ]
-                        )
+                        Question::factory()->create()->id
                     ]
                 );
             }
