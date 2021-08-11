@@ -6,6 +6,7 @@ import Register from './components/Auth/Register';
 import AboutPage from './pages/AboutPage';
 import Guard from './service/middleware';
 import RegisterInfoPage from './pages/RegisterInfoPage';
+import ExamManagement from './pages/ExamManagement';
 import Report from './pages/StatisticsPage';
 import ExamPage from './pages/ExamPage';
 import StudentGrade from './pages/StudentGrade';
@@ -38,10 +39,10 @@ export default new VueRouter({
 			component: AboutPage,
 		},
 		{
-			path: '/register-info',
-			name: 'register-info',
+			path: '/exam-management',
+			name: 'exam-management',
 			beforeEnter: Guard.redirectIfNotAuthenticated,
-			component: RegisterInfoPage,
+			component: ExamManagement,
 		},
 		{
 			path: '/report',

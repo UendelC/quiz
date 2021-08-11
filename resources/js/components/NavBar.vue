@@ -7,7 +7,7 @@
 
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav v-if="user.type==='teacher'">
-        <b-nav-item @click="handleForm()">Cadastrar Avaliação</b-nav-item>
+        <b-nav-item @click="handleForm()">Gerenciar Avaliações</b-nav-item>
         <b-nav-item @click="handleReport()">Relatórios</b-nav-item>
       </b-navbar-nav>
 
@@ -66,7 +66,7 @@
       },
 
       handleForm() {
-        this.$router.push({name: 'register-info'});
+        this.$router.push({name: 'exam-management'});
       },
 
       handleReport() {
