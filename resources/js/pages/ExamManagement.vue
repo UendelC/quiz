@@ -1,6 +1,7 @@
 <template>
   <div>
     <nav-bar></nav-bar>
+    <h2>Avaliações</h2>
     <div class="container">
         <b-table
           striped
@@ -28,7 +29,29 @@ export default {
   components: {
     NavBar,
   },
-}
+
+  created() {
+    this.fetchExams();
+  },
+
+  data() {
+    return {
+      items: [],
+      fields: [],
+    }
+  },
+
+  methods: {
+    fetchExams() {
+      axios.get('/api/exams')
+        .then(response => {
+          this.items = response.data;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+  },
 </script>
 
 <style>

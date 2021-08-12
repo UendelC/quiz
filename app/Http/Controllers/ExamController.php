@@ -17,17 +17,23 @@ class ExamController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $previous_exams = $user->exams()->pluck('id');
 
-        $exam = Exam::whereNotIn('id', $previous_exams)->latest()->first();
+        if ($user->type == 'participant') {
+            $previous_exams = $user->exams()->pluck('id');
+            $exam = Exam::whereNotIn('id', $previous_exams)->latest()->first();
+            return new ExamResource($exam);
+        }
+
+        if ($user->type == 'teacher') {
+            $exam = $user->lecture->exams()->get();
+            return ExamResource::collection($exam);
+        }
 
         if (!isset($exam)) {
             return [
                 'message' => 'No exams available',
             ];
         }
-
-        return new ExamResource($exam);
     }
 
     public function store(Request $request)

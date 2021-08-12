@@ -16,6 +16,7 @@ class ExamResource extends JsonResource
     {
         return [
             'exam_id' => $this->id,
+            'category' => new CategoryResource($this->category),
             $this->mergeWhen(
                 $this->has('questions'),
                 [
