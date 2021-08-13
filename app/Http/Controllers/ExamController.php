@@ -22,8 +22,21 @@ class ExamController extends Controller
         }
 
         if ($user->type == 'teacher') {
-            $exam = $user->lecture->exams()->get();
-            return ExamResource::collection($exam);
+            $exam = $user
+                ->lecture
+                ->exams()
+                ->with(['category', 'users'])
+                ->get()
+                ->map(
+                    function ($exam) {
+                        $exam->category_name = $exam->category->name;
+                        $exam->creation_date = $exam->created_at->format('d/m/Y');
+                        $exam->actions = isset($exam->users);
+
+                        return $exam;
+                    }
+                );
+            return $exam;
         }
 
         if (!isset($exam)) {

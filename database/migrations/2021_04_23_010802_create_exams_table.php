@@ -15,6 +15,8 @@ class CreateExamsTable extends Migration
     {
         Schema::create('exams', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
+            $table->boolean('published');
             $table->unsignedBigInteger('category_id');
             $table->foreign('category_id')
                 ->references('id')

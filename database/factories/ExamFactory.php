@@ -25,6 +25,8 @@ class ExamFactory extends Factory
         return [
             // 'score' => $this->faker->numberBetween(0, 10),
             'category_id' => Category::factory()->create()->id,
+            'title' => $this->faker->title,
+            'published' => $this->faker->boolean(),
         ];
     }
 }

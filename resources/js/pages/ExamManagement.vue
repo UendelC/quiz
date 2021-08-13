@@ -1,13 +1,13 @@
 <template>
   <div>
     <nav-bar></nav-bar>
-    <h2>Avaliações</h2>
-    <div class="container">
+      <div class="container">
+        <h2>Avaliações</h2>
         <b-table
           striped
           hover
-          :items="[]"
-          :fields="[]"
+          :items="items"
+          :fields="fields"
           bordered
           sticky-header
           :busy="false"
@@ -24,6 +24,9 @@
 
 <script>
 import NavBar from '../components/NavBar';
+import Cookie from '../service/cookie';
+
+const token = Cookie.getToken();
 
 export default {
   components: {
@@ -37,13 +40,43 @@ export default {
   data() {
     return {
       items: [],
-      fields: [],
+      fields: [
+          {
+            key: 'title',
+            label: 'Avaliação',
+            sortable: true,
+          },
+          {
+            key: 'category_name',
+            label: 'Categoria',
+            sortable: true,
+          },
+          {
+            key: 'creation_date',
+            label: 'Data',
+            sortable: true,
+          },
+          {
+            key: 'published',
+            label: 'Publicado',
+            sortable: true,
+          },
+          {
+            key: 'actions',
+            label: 'Ações',
+            sortable: true,
+          }
+      ],
     }
   },
 
   methods: {
     fetchExams() {
-      axios.get('/api/exams')
+      axios.get('/api/exams', {
+          headers: {
+            Authorization: 'Bearer ' + token
+          }
+        })
         .then(response => {
           this.items = response.data;
         })
