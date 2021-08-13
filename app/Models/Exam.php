@@ -11,6 +11,7 @@ class Exam extends Model
 
     protected $fillable = [
         'category_id',
+        'subject_id',
     ];
 
     public function users()

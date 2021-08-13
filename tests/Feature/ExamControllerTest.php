@@ -81,4 +81,102 @@ class ExamControllerTest extends TestCase
             )
             ->assertStatus(200);
     }
+
+    public function testParticipantsCanGetExams()
+    {
+        $teacher = User::factory()->teacher()->create();
+        $participant = User::factory()->participant()->create();
+        $subject = Subject::factory()->create(
+            [
+                'teacher_id' => $teacher->id,
+            ]
+        );
+
+        $exam_already_taken = Exam::factory()->create(
+            [
+                'subject_id' => $subject->id,
+            ]
+        );
+
+        $exam = Exam::factory()->create(
+            [
+                'subject_id' => $subject->id,
+            ]
+        );
+
+        $questions = Question::factory(2)->create();
+        $questions->each(
+            function ($question) {
+                Choice::factory(4)->create(
+                    [
+                        'question_id' => $question->id,
+                    ]
+                );
+            }
+        );
+
+        $exam->questions()->attach($questions[1]);
+
+        $exam_already_taken->questions()->attach($questions[0]);
+
+        $participant->exams()->attach($exam_already_taken->id);
+
+        Sanctum::actingAs($participant);
+
+        $this->json('GET', 'api/exams')
+            ->assertJsonFragment(
+                [
+                    'exam_id' => $exam->id,
+                ]
+            )
+            ->assertJsonMissing(
+                [
+                    'exam_id' => $exam_already_taken->id,
+                ]
+            )
+            ->assertStatus(200);
+    }
+
+    public function testATeacherCanStoreAnewExam()
+    {
+        $teacher = User::factory()->teacher()->create();
+
+        $subject = Subject::factory()->create(
+            [
+                'teacher_id' => $teacher->id,
+            ]
+        );
+
+        $payload = [
+            'subject_id' => $subject->id,
+            'category' => 'categoria',
+            'questions' => [
+                [
+                    'question' => 'titulo',
+                    'explanation' => 'explicação',
+                    'choices' => [
+                        [
+                            'description' => 'descrição',
+                            'is_right' => 'true',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        Sanctum::actingAs($teacher);
+
+        $this->json('POST', 'api/exams', $payload)
+            ->assertJson(
+                [
+                    'status' => 'ok',
+                ]
+            )
+            ->assertStatus(200);
+
+        $teacher->refresh();
+
+        $this->assertCount(1, $teacher->lecture->exams()->get());
+        $this->assertCount(1, $teacher->lecture->exams()->first()->questions()->get());
+    }
 }

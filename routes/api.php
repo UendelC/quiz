@@ -36,8 +36,8 @@ Route::middleware('auth:sanctum')->group(
         Route::post('/exams', [ExamController::class, 'store']);
         Route::get('/exams', [ExamController::class, 'index']);
         Route::get('/categories', [CategoryController::class, 'index']);
-        Route::post('/takeexam', [ExamController::class, 'takeExam']);
-        Route::get('/grades', [ExamController::class, 'grades']);
+        Route::post('/takeexam', [UserController::class, 'takeExam']);
+        Route::get('/grades', [UserController::class, 'grades']);
     }
 );
 

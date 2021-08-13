@@ -7,10 +7,7 @@ use App\Models\Category;
 use App\Models\Choice;
 use App\Models\Exam;
 use App\Models\Question;
-use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Revolution\Google\Sheets\Facades\Sheets;
 
 class ExamController extends Controller
 {
@@ -38,6 +35,12 @@ class ExamController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate(
+            [
+                'subject_id' => 'required',
+                'questions' => 'required'
+            ]
+        );
         $questions = $request->questions;
 
         if (is_string($request->category)) {
@@ -53,6 +56,7 @@ class ExamController extends Controller
         $exam = Exam::create(
             [
                 'category_id' => $category->id,
+                'subject_id' => $request->subject_id,
             ]
         );
 
@@ -61,9 +65,10 @@ class ExamController extends Controller
                 [
                     'title' => $question['question'],
                     'explanation' => $question['explanation'],
-                    'exam_id' => $exam->id,
                 ]
             );
+
+            $exam->questions()->attach($saved_question->id);
 
             foreach ($question['choices'] as $choice) {
                 Choice::create(
@@ -79,86 +84,6 @@ class ExamController extends Controller
         return response()->json(
             [
                 'status' => 'ok',
-            ]
-        );
-    }
-
-    public function takeExam(Request $request)
-    {
-        $request->validate(
-            [
-                'exam_id' => 'required',
-                'answers' => 'required',
-            ]
-        );
-
-        $answers = $request->get('answers');
-        $exam_id = $request->get('exam_id');
-
-        $user = auth()->user();
-
-        if ($user->exams()->find($exam_id)) {
-            return response()->json(
-                [
-                    'status' => 'exame já enviado',
-                ]
-            );
-        }
-
-        $score = Choice::whereIn('id', $answers)->where('is_right', true)->count();
-        $amount_of_questions = Exam::find($exam_id)->questions()->count();
-
-        $grade = ($score / $amount_of_questions) * 10;
-
-        $user->exams()->attach(
-            $exam_id,
-            [
-                'score' => $grade,
-            ]
-        );
-
-        $exam = Exam::find($exam_id);
-
-        $data[] = [
-            'Topico' => $exam->category->name,
-            'participante' => $user->name,
-            'Nota' => $grade,
-            'date' => $exam->created_at->format('d/m/Y'),
-        ];
-
-        Sheets::spreadsheet('1SRGZH4PaHn-w52GI1ZwdTCJsjVLundz4rPN4A66k4Yg')
-            ->sheet('Página3')
-            ->append($data);
-
-        return response()->json(
-            [
-                'status' => 'ok',
-                'score' => $grade,
-            ]
-        );
-    }
-
-    public function grades()
-    {
-        $user = auth()->user();
-
-        $exams = $user
-            ->exams()
-            ->with('category')
-            ->get()
-            ->map(
-                function ($exam) {
-                    $exam->score = $exam->pivot->score;
-                    $exam->date = $exam->created_at->format('d/m/Y');
-                    $exam->category_name = $exam->category->name;
-                    unset($exam->pivot);
-                    return $exam;
-                }
-            );
-
-        return response()->json(
-            [
-                'exams' => $exams,
             ]
         );
     }
