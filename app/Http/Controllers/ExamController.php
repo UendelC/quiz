@@ -51,7 +51,8 @@ class ExamController extends Controller
         $request->validate(
             [
                 'subject_id' => 'required',
-                'questions' => 'required'
+                'questions' => 'required',
+                'title' => 'required',
             ]
         );
         $questions = $request->questions;
@@ -70,6 +71,8 @@ class ExamController extends Controller
             [
                 'category_id' => $category->id,
                 'subject_id' => $request->subject_id,
+                'title' => $request->title,
+                'published' => false,
             ]
         );
 

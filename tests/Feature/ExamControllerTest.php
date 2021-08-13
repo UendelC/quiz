@@ -53,30 +53,9 @@ class ExamControllerTest extends TestCase
         Sanctum::actingAs($teacher);
 
         $this->json('GET', 'api/exams')
-            ->assertJsonStructure(
+            ->assertJsonFragment(
                 [
-                    'data' => [
-                        '*' => [
-                            'exam_id',
-                            'category' => [
-                                'name',
-                                'id',
-                            ],
-                            'questions' => [
-                                '*' => [
-                                    'id',
-                                    'title',
-                                    'explanation',
-                                    'choices' => [
-                                        '*' => [
-                                            'description',
-                                            'id',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
+                    'category_name' => $exams[0]->category->name,
                 ]
             )
             ->assertStatus(200);
@@ -137,7 +116,7 @@ class ExamControllerTest extends TestCase
             ->assertStatus(200);
     }
 
-    public function testATeacherCanStoreAnewExam()
+    public function testATeacherCanStoreANewExam()
     {
         $teacher = User::factory()->teacher()->create();
 
@@ -150,6 +129,7 @@ class ExamControllerTest extends TestCase
         $payload = [
             'subject_id' => $subject->id,
             'category' => 'categoria',
+            'title' => 'titulo do exame',
             'questions' => [
                 [
                     'question' => 'titulo',
