@@ -36,6 +36,7 @@ Route::middleware('auth:sanctum')->group(
         Route::post('/exams', [ExamController::class, 'store']);
         Route::get('/exams', [ExamController::class, 'index']);
         Route::patch('/exams/{exam}', [ExamController::class, 'update']);
+        Route::delete('/exams/{exam}', [ExamController::class, 'destroy']);
         Route::get('/categories', [CategoryController::class, 'index']);
         Route::post('/takeexam', [UserController::class, 'takeExam']);
         Route::get('/grades', [UserController::class, 'grades']);

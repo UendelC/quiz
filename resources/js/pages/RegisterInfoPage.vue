@@ -3,6 +3,15 @@
   <nav-bar></nav-bar>
   <div class="container">
     <b-form @submit="onSubmit" @reset="onReset" v-if="show">
+      <b-form-group id="input-group-0" label="Título da Avaliação" label-for="input-0">
+        <b-form-input
+          id="input-0"
+          v-model="form.title"
+          placeholder="Digite o título"
+          required
+        ></b-form-input>
+      </b-form-group>
+
       <b-form-group
         id="input-group-1"
         label="Categoria:"
@@ -55,7 +64,9 @@
           <b-form-group label="Opção:">
             <b-form-input v-model="choice.description"></b-form-input>
             <b-form-checkbox v-model="choice.is_right">Marque se a opção for a correta</b-form-checkbox>
-            <b-button @click="removeChoice(index)">X</b-button>
+            <b-button @click="removeChoice(index)" variant='danger'>
+              <b-icon icon='trash'></b-icon>
+            </b-button>
           </b-form-group>
         </div>
         <b-button @click="addChoiceField()">Adicionar Alternativa</b-button>
@@ -63,7 +74,7 @@
 
       <b-button @click="addNewQuestion()">Cadastrar próxima questão</b-button>
       <b-button type="submit" variant="primary">Finalizar Cadastro de Avaliação</b-button>
-      <b-button type="reset" variant="danger">Reset</b-button>
+      <b-button type="reset" variant="danger">Cancelar</b-button>
     </b-form>
   </div>
 </div>
@@ -80,6 +91,7 @@ const token = Cookie.getToken();
     data() {
       return {
         form: {
+          title: '',
           category: '',
           questions: [],
           // category: '',

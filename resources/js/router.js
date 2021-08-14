@@ -45,6 +45,12 @@ export default new VueRouter({
 			component: ExamManagement,
 		},
 		{
+			path: '/exam-create',
+			name: 'exam-create',
+			beforeEnter: Guard.redirectIfNotAuthenticated,
+			component: RegisterInfoPage,
+		},
+		{
 			path: '/report',
 			name: 'report',
 			beforeEnter: Guard.redirectIfNotAuthenticated,

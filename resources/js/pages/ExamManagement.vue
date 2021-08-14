@@ -1,8 +1,11 @@
 <template>
   <div>
     <nav-bar></nav-bar>
-      <div class="container">
-        <h2>Avaliações</h2>
+      <div class="container-lg">
+        <div>
+          <h2>Avaliações</h2>
+          <b-button variant='primary' @click="handleCreate">Criar nova Avaliação</b-button>
+        </div>
         <b-table
           striped
           hover
@@ -19,7 +22,7 @@
           </template>
           <template #cell(published)="row">
             <b-form-checkbox
-              :id="row.value"
+              :id="row.item.id"
               :name="row.item.title"
               :checked="row.item.published === '1'"
               :disabled="!row.item.actions"
@@ -33,23 +36,22 @@
           <template #cell(actions)="row">
             <b-button size="sm" @click="row.toggleDetails" variant='success'>
               <b-icon icon='eye'></b-icon>
-              {{ row.detailsShowing ? 'Hide' : 'Show' }} Details
+              {{ row.detailsShowing ? 'Esconder' : 'Mostrar' }} Detalhes
             </b-button>
             <b-button size='sm' variant='primary' :disabled="!row.item.actions">
               <b-icon icon='pencil-square'></b-icon>
               Editar
             </b-button>
             <b-button size='sm' variant='danger' :disabled="!row.item.actions">
-              <b-icon icon='trash'></b-icon>
+              <b-icon icon='trash' @click="deleteExam(row.item.id)"></b-icon>
               Excluir
             </b-button>
           </template>
 
           <template #row-details="row">
             <b-card>
-              <ul>
-                <li v-for="(value, key) in row.item" :key="key">{{ key }}: {{ value }}</li>
-              </ul>
+              <exam-preview :exam="row.item">
+              </exam-preview>
             </b-card>
           </template>
         </b-table>
@@ -59,6 +61,7 @@
 
 <script>
 import NavBar from '../components/NavBar';
+import ExamPreview from '../components/ExamPreview';
 import Cookie from '../service/cookie';
 
 const token = Cookie.getToken();
@@ -66,6 +69,7 @@ const token = Cookie.getToken();
 export default {
   components: {
     NavBar,
+    ExamPreview,
   },
 
   created() {
@@ -140,12 +144,29 @@ export default {
           console.log(error);
         });
     },
+
+    deleteExam(exam_id) {
+      axios.delete(`/api/exams/${exam_id}`, {
+        headers: {
+          Authorization: 'Bearer ' + token
+        }
+      })
+      .then(response => {
+        this.fetchExams();
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    },
+
+    handleCreate() {
+        this.$router.push({name: 'exam-create'});
+    }
   },
 
 }
 
 </script>
 
-<style>
-
+<style scoped>
 </style>

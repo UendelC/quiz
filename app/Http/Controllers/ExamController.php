@@ -25,13 +25,13 @@ class ExamController extends Controller
             $exam = $user
                 ->lecture
                 ->exams()
-                ->with(['category', 'users'])
+                ->with(['category', 'users', 'questions.choices'])
                 ->get()
                 ->map(
                     function ($exam) {
                         $exam->category_name = $exam->category->name;
                         $exam->creation_date = $exam->created_at->format('d/m/Y');
-                        $exam->actions = !isset($exam->users);
+                        $exam->actions = $exam->users->count() == 0;
 
                         return $exam;
                     }
@@ -50,7 +50,6 @@ class ExamController extends Controller
     {
         $request->validate(
             [
-                'subject_id' => 'required',
                 'questions' => 'required',
                 'title' => 'required',
             ]
@@ -67,10 +66,12 @@ class ExamController extends Controller
             $category = Category::findOrFail($request->category);
         }
 
+        $teacher = auth()->user();
+
         $exam = Exam::create(
             [
                 'category_id' => $category->id,
-                'subject_id' => $request->subject_id,
+                'subject_id' => $teacher->lecture->id,
                 'title' => $request->title,
                 'published' => false,
             ]
@@ -112,6 +113,25 @@ class ExamController extends Controller
                     'published' => $request->published,
                 ]
             );
+
+            return response()->json(
+                [
+                    'status' => 'ok',
+                ]
+            );
+        }
+
+        return response()->json(
+            [
+                'status' => 'Não pode atualizar exames já respondidos',
+            ]
+        );
+    }
+
+    public function destroy(Exam $exam)
+    {
+        if ($exam->users()->count() == 0) {
+            $exam->delete();
 
             return response()->json(
                 [

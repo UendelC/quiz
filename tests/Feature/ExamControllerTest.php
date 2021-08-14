@@ -242,4 +242,42 @@ class ExamControllerTest extends TestCase
             ]
         );
     }
+
+    public function testATeacherCanDeleteAnExam()
+    {
+        $teacher = User::factory()->teacher()->create();
+
+        $subject = Subject::factory()->create(
+            [
+                'teacher_id' => $teacher->id,
+            ]
+        );
+
+        $exam = Exam::factory()->create(
+            [
+                'subject_id' => $subject->id,
+                'published' => false,
+            ]
+        );
+
+        Sanctum::actingAs($teacher);
+
+        $response = $this->json('DELETE', "api/exams/$exam->id");
+
+        $response->assertStatus(200)
+            ->assertJson(
+                [
+                    'status' => 'ok'
+                ]
+            );
+
+        $this->assertDatabaseMissing(
+            (new Exam)->getTable(),
+            [
+                'id' => $exam->id,
+                'subject_id' => $subject->id,
+                'published' => '1'
+            ]
+        );
+    }
 }
