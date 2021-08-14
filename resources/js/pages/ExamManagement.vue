@@ -22,7 +22,7 @@
           </template>
           <template #cell(published)="row">
             <b-form-checkbox
-              :id="row.item.id"
+              :id="'exam'+row.item.id"
               :name="row.item.title"
               :checked="row.item.published === '1'"
               :disabled="!row.item.actions"
@@ -30,7 +30,6 @@
               @input="togglePublished(row)"
             >
             </b-form-checkbox>
-            <b-tooltip :target="row.value" v-if="!row.item.actions">Não é possível alterar o status de publicação de um exame que já possui respostas</b-tooltip>
           </template>
 
           <template #cell(actions)="row">
@@ -135,7 +134,7 @@ export default {
           headers: {
             Authorization: 'Bearer ' + token
           },
-          published: row.item.published
+          published: row.item.published == '0' ? '1' : '0',
         })
         .then(response => {
           this.fetchExams();
