@@ -35,6 +35,7 @@ Route::middleware('auth:sanctum')->group(
         Route::get('/users', [UserController::class, 'index']);
         Route::post('/exams', [ExamController::class, 'store']);
         Route::get('/exams', [ExamController::class, 'index']);
+        Route::patch('/exams/{exam}', [ExamController::class, 'update']);
         Route::get('/categories', [CategoryController::class, 'index']);
         Route::post('/takeexam', [UserController::class, 'takeExam']);
         Route::get('/grades', [UserController::class, 'grades']);

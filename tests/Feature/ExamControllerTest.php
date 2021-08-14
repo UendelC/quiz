@@ -159,4 +159,87 @@ class ExamControllerTest extends TestCase
         $this->assertCount(1, $teacher->lecture->exams()->get());
         $this->assertCount(1, $teacher->lecture->exams()->first()->questions()->get());
     }
+
+    public function testATeacherCanUpdateThePublishedStatusOfAnExam()
+    {
+        $teacher = User::factory()->teacher()->create();
+
+        $subject = Subject::factory()->create(
+            [
+                'teacher_id' => $teacher->id,
+            ]
+        );
+
+        $exam = Exam::factory()->create(
+            [
+                'subject_id' => $subject->id,
+                'published' => false,
+            ]
+        );
+
+        Sanctum::actingAs($teacher);
+
+        $response = $this->json('PATCH', "api/exams/$exam->id", ['published' => '1']);
+
+        $response->assertStatus(200)
+            ->assertJson(
+                [
+                    'status' => 'ok'
+                ]
+            );
+
+        $this->assertDatabaseHas(
+            (new Exam)->getTable(),
+            [
+                'id' => $exam->id,
+                'subject_id' => $subject->id,
+                'published' => '1'
+            ]
+        );
+    }
+
+    public function testATeacherCannotUpdateThePublishedStatusOfAnAlreadyAnsweredExam()
+    {
+        $teacher = User::factory()->teacher()->create();
+        $participant = User::factory()->participant()->create();
+
+        $subject = Subject::factory()->create(
+            [
+                'teacher_id' => $teacher->id,
+            ]
+        );
+
+        $exam = Exam::factory()->create(
+            [
+                'subject_id' => $subject->id,
+                'published' => false,
+            ]
+        );
+
+        $participant->exams()->attach($exam->id);
+
+        Sanctum::actingAs($teacher);
+
+        $response = $this->json(
+            'PATCH',
+            "api/exams/$exam->id",
+            ['published' => '1']
+        );
+
+        $response->assertStatus(200)
+            ->assertJson(
+                [
+                    'status' => 'Não pode atualizar exames já respondidos'
+                ]
+            );
+
+        $this->assertDatabaseMissing(
+            (new Exam)->getTable(),
+            [
+                'id' => $exam->id,
+                'subject_id' => $subject->id,
+                'published' => '1'
+            ]
+        );
+    }
 }

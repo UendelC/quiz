@@ -19,6 +19,8 @@ class UserControllerTest extends TestCase
     public function testCanShowUsers()
     {
         $users = User::factory()->count(3)->create();
+
+        Sanctum::actingAs($users[0]);
         
         $response = $this->json('GET', 'api/users');
         $response->assertOk();
@@ -40,8 +42,7 @@ class UserControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertJSON(
             [
-                'name' => $user->name,
-                'email' => $user->email,
+                'status' => 'Success',
             ]
         );
     }
@@ -50,12 +51,13 @@ class UserControllerTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this->json('GET', 'api/user/' . $user->id);
-        $response->assertJson(
+        Sanctum::actingAs($user);
+
+        $response = $this->json('GET', "api/me/user");
+        $response->assertJsonFragment(
             [
                 'name' => $user->name,
                 'email' => $user->email,
-                'type' => $user->type,
             ]
         );
     }

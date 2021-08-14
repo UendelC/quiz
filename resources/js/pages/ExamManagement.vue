@@ -17,6 +17,32 @@
           <template #empty="scope">
             <h4>{{ scope.emptyText }}</h4>
           </template>
+          <template #cell(published)="row">
+            <b-form-checkbox
+              :id="row.value"
+              :name="row.item.title"
+              :checked="row.item.published === '1'"
+              :disabled="!row.item.actions"
+              size='lg'
+              @input="togglePublished(row)"
+            >
+            </b-form-checkbox>
+            <b-tooltip :target="row.value" v-if="!row.item.actions">Não é possível alterar o status de publicação de um exame que já possui respostas</b-tooltip>
+          </template>
+
+          <template #cell(actions)="row">
+            <b-button size="sm" @click="row.toggleDetails">
+              {{ row.detailsShowing ? 'Hide' : 'Show' }} Details
+            </b-button>
+          </template>
+
+          <template #row-details="row">
+            <b-card>
+              <ul>
+                <li v-for="(value, key) in row.item" :key="key">{{ key }}: {{ value }}</li>
+              </ul>
+            </b-card>
+          </template>
         </b-table>
       </div>
   </div>
@@ -58,8 +84,9 @@ export default {
           },
           {
             key: 'published',
-            label: 'Publicado',
+            label: 'Publicado?',
             sortable: true,
+            class: 'text-center',
           },
           {
             key: 'actions',
@@ -84,8 +111,29 @@ export default {
           console.log(error);
         });
     },
+
+    info() {
+
+    },
+
+    togglePublished(row) {
+      axios.patch(`/api/exams/${row.item.id}`, {
+          headers: {
+            Authorization: 'Bearer ' + token
+          },
+          published: row.item.published
+        })
+        .then(response => {
+          this.fetchExams();
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
   },
+
 }
+
 </script>
 
 <style>

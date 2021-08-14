@@ -31,7 +31,7 @@ class ExamController extends Controller
                     function ($exam) {
                         $exam->category_name = $exam->category->name;
                         $exam->creation_date = $exam->created_at->format('d/m/Y');
-                        $exam->actions = isset($exam->users);
+                        $exam->actions = !isset($exam->users);
 
                         return $exam;
                     }
@@ -100,6 +100,29 @@ class ExamController extends Controller
         return response()->json(
             [
                 'status' => 'ok',
+            ]
+        );
+    }
+
+    public function update(Request $request, Exam $exam)
+    {
+        if ($exam->users()->count() == 0) {
+            $exam->update(
+                [
+                    'published' => $request->published,
+                ]
+            );
+
+            return response()->json(
+                [
+                    'status' => 'ok',
+                ]
+            );
+        }
+
+        return response()->json(
+            [
+                'status' => 'Não pode atualizar exames já respondidos',
             ]
         );
     }
