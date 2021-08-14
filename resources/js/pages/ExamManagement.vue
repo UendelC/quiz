@@ -31,8 +31,17 @@
           </template>
 
           <template #cell(actions)="row">
-            <b-button size="sm" @click="row.toggleDetails">
+            <b-button size="sm" @click="row.toggleDetails" variant='success'>
+              <b-icon icon='eye'></b-icon>
               {{ row.detailsShowing ? 'Hide' : 'Show' }} Details
+            </b-button>
+            <b-button size='sm' variant='primary' :disabled="!row.item.actions">
+              <b-icon icon='pencil-square'></b-icon>
+              Editar
+            </b-button>
+            <b-button size='sm' variant='danger' :disabled="!row.item.actions">
+              <b-icon icon='trash'></b-icon>
+              Excluir
             </b-button>
           </template>
 
@@ -92,6 +101,7 @@ export default {
             key: 'actions',
             label: 'Ações',
             sortable: true,
+            class: 'text-center',
           }
       ],
     }
