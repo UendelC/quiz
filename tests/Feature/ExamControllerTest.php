@@ -280,4 +280,26 @@ class ExamControllerTest extends TestCase
             ]
         );
     }
+
+    public function testItIsPossibleToSeeAnExam()
+    {
+        $this->withoutExceptionHandling();
+        $this->withoutMiddleware();
+        $exam = Exam::factory()->create(
+            [
+                'subject_id' => Subject::factory()->create()->id,
+            ]
+        );
+
+        $this->json('GET', "api/exams/$exam->id")
+            ->assertJson(
+                [
+                    'data' => [
+                        'exam_id' => $exam->id,
+                        'title' => $exam->title,
+                    ]
+                ]
+            )
+            ->assertStatus(200);
+    }
 }
