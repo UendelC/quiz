@@ -121,6 +121,9 @@ const token = Cookie.getToken();
 
     created() {
       this.getCategories();
+      if (this.$route.params.exam_id) {
+        this.mountExam(this.$route.params.exam_id);
+      }
     },
 
     methods: {
@@ -218,6 +221,16 @@ const token = Cookie.getToken();
 
       removeChoice(index) {
         this.currentQuestion.choices.splice(index, 1);
+      },
+
+      mountExam(exam_id) {
+        axios.get(`api/exams/${exam_id}`, {
+          headers: {
+            Authorization: 'Bearer' + token
+          }
+        }).then( response => {
+          console.log(response.data);
+        })
       },
 
       getCategories() {
