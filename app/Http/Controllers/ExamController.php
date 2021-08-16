@@ -146,4 +146,10 @@ class ExamController extends Controller
             ]
         );
     }
+
+    public function show(String $exam_id)
+    {
+        $exam = Exam::find($exam_id);
+        return new ExamResource($exam);
+    }
 }
