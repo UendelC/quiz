@@ -2,9 +2,12 @@
   <div>
     <nav-bar></nav-bar>
       <div class="container-lg">
-        <div>
+        <div class="exam_header">
           <h2>Avaliações</h2>
-          <b-button variant='primary' @click="handleCreate">Criar nova Avaliação</b-button>
+          <b-button variant='primary' @click="handleCreate">
+            Criar nova Avaliação
+            <b-icon icon="plus"></b-icon>
+            </b-button>
         </div>
         <b-table
           striped
@@ -37,12 +40,22 @@
               <b-icon icon='eye'></b-icon>
               {{ row.detailsShowing ? 'Esconder' : 'Mostrar' }} Detalhes
             </b-button>
-            <b-button size='sm' variant='primary' :disabled="!row.item.actions">
+            <b-button
+              size='sm'
+              variant='primary'
+              :disabled="!row.item.actions"
+              @click="editExam(row.item.id)"
+            >
               <b-icon icon='pencil-square'></b-icon>
               Editar
             </b-button>
-            <b-button size='sm' variant='danger' :disabled="!row.item.actions">
-              <b-icon icon='trash' @click="deleteExam(row.item.id)"></b-icon>
+            <b-button
+              size='sm'
+              variant='danger'
+              :disabled="!row.item.actions"
+              @click="deleteExam(row.item.id)"
+            >
+              <b-icon icon='trash'></b-icon>
               Excluir
             </b-button>
           </template>
@@ -160,6 +173,10 @@ export default {
 
     handleCreate() {
         this.$router.push({name: 'exam-create'});
+    },
+
+    editExam(exam_id) {
+        this.$router.push({name: 'exam-create', params: {exam_id}});
     }
   },
 
@@ -168,4 +185,9 @@ export default {
 </script>
 
 <style scoped>
+  .exam_header {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 15px;
+  }
 </style>
