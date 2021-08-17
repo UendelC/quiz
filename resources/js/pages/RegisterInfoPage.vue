@@ -16,7 +16,6 @@
         id="input-group-1"
         label="Categoria:"
         label-for="input-1"
-        v-if="showCategory"
       >
         <b-form-group>
           <b-form-row>
@@ -40,41 +39,55 @@
           </b-modal>
         </b-form-group>
       </b-form-group>
+      <div class='question-body'>
+        <b-form-group id="input-group-2" label="Enunciado da Questão:" label-for="input-2">
+          <b-form-input
+            id="input-2"
+            v-model="currentQuestion.title"
+            placeholder="Digite o enunciado"
+            required
+          ></b-form-input>
+        </b-form-group>
 
-      <b-form-group id="input-group-2" label="Enunciado da Questão:" label-for="input-2">
-        <b-form-input
-          id="input-2"
-          v-model="currentQuestion.question"
-          placeholder="Digite o enunciado"
-          required
-        ></b-form-input>
-      </b-form-group>
+        <b-form-group id="input-group-3" label="Explicação da Questão:" label-for="input-3">
+          <b-form-input
+            id="input-3"
+            v-model="currentQuestion.explanation"
+            placeholder="Explicação da questão"
+            required
+          ></b-form-input>
+        </b-form-group>
 
-      <b-form-group id="input-group-3" label="Explicação da Questão:" label-for="input-3">
-        <b-form-input
-          id="input-3"
-          v-model="currentQuestion.explanation"
-          placeholder="Explicação da questão"
-          required
-        ></b-form-input>
-      </b-form-group>
+        <b-form-group id="input-group-4" label="Alternativas:" label-for="input-4">
+          <div v-for="(choice, index) in currentQuestion.choices" :key="index">
+            <b-form-group label="Opção:">
+              <b-form-input v-model="choice.description"></b-form-input>
+              <b-form-checkbox v-model="choice.is_right">Marque se a opção for a correta</b-form-checkbox>
+              <b-button @click="removeChoice(index)" variant='danger'>
+                <b-icon icon='trash'></b-icon>
+              </b-button>
+            </b-form-group>
+          </div>
+          <b-button @click="addChoiceField()">Adicionar Alternativa</b-button>
+        </b-form-group>
 
-      <b-form-group id="input-group-4" label="Alternativas:" label-for="input-4">
-        <div v-for="(choice, index) in currentQuestion.choices" :key="index">
-          <b-form-group label="Opção:">
-            <b-form-input v-model="choice.description"></b-form-input>
-            <b-form-checkbox v-model="choice.is_right">Marque se a opção for a correta</b-form-checkbox>
-            <b-button @click="removeChoice(index)" variant='danger'>
-              <b-icon icon='trash'></b-icon>
-            </b-button>
-          </b-form-group>
+        <div class='button-box'>
+          <b-button @click="addNewQuestion()">Cadastrar Questão</b-button>
+          <b-button type="reset" variant="danger">Cancelar</b-button>
         </div>
-        <b-button @click="addChoiceField()">Adicionar Alternativa</b-button>
-      </b-form-group>
-
-      <b-button @click="addNewQuestion()">Cadastrar próxima questão</b-button>
+      </div>
+      <div class="pagination-hand">
+        <b-button
+          variant="outline-primary"
+          pill
+          v-for="question, idx in form.questions" :key="question.id"
+          class="m-1"
+          @click="changeQuestion(idx)"
+        >
+          {{ idx + 1 }}
+        </b-button>
+      </div>
       <b-button type="submit" variant="primary">Finalizar Cadastro de Avaliação</b-button>
-      <b-button type="reset" variant="danger">Cancelar</b-button>
     </b-form>
   </div>
 </div>
@@ -100,7 +113,7 @@ const token = Cookie.getToken();
           // choices: [],
         },
         currentQuestion: {
-          question: '',
+          title: '',
           explanation: '',
           choices: [],
         },
@@ -112,6 +125,8 @@ const token = Cookie.getToken();
         }],
         exam: [],
         newCategory: '',
+        currentQuestionIndex: 1,
+        questionsSize: 1,
       }
     },
 
@@ -124,6 +139,15 @@ const token = Cookie.getToken();
       if (this.$route.params.exam_id) {
         this.mountExam(this.$route.params.exam_id);
       }
+    },
+
+    watch: {
+      currentQuestionIndex(newValue) {
+        if (true) {
+          console.log(newValue);
+        }
+        // this.currentQuestion = this.form.questions[newValue];
+      },
     },
 
     methods: {
@@ -163,7 +187,7 @@ const token = Cookie.getToken();
       },
 
       resetForm() {
-        this.currentQuestion.question = '';
+        this.currentQuestion.title = '';
         this.currentQuestion.explanation = null
         this.currentQuestion.choices = [];
         // Trick to reset/clear native browser form validation state
@@ -171,6 +195,10 @@ const token = Cookie.getToken();
         this.$nextTick(() => {
           this.show = true
         })
+      },
+
+      changeQuestion(idx) {
+        this.currentQuestion = this.form.questions[idx];
       },
 
       addChoiceField() {
@@ -215,6 +243,8 @@ const token = Cookie.getToken();
         if (!fail) {
           let aux = Object.assign({}, this.currentQuestion);
           this.form.questions.push(aux);
+          this.currentQuestionIndex++;
+          this.questionsSize++;
           this.resetForm();
         }
       },
@@ -229,7 +259,19 @@ const token = Cookie.getToken();
             Authorization: 'Bearer' + token
           }
         }).then( response => {
-          console.log(response.data);
+          this.form.title = response.data.data.title;
+          this.form.category = response.data.data.category.id;
+          let questions = response.data.data.questions.map(question => {
+            let choices = question.choices.map(choice => {
+              choice.is_right = choice.is_right == '1' ? true : false;
+              return choice;
+            });
+            question.choices = choices;
+            return question;
+          });
+          console.log(questions);
+          this.form.questions = questions;
+          this.currentQuestion = questions[0];
         })
       },
 
@@ -250,6 +292,20 @@ const token = Cookie.getToken();
   }
 </script>
 
-<style>
+<style scope>
+  .button-box {
+    display: flex;
+  }
 
+  .question-body {
+    background-color: cadetblue;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+  }
+
+  .pagination-hand {
+    display: flex;
+    justify-content: center;
+  }
 </style>
