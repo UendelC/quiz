@@ -14,9 +14,15 @@ class ChoiceResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
+        $array_data = [
             'description' => $this->description,
             'id' => $this->id
         ];
+
+        if (auth()->user()->type == 'teacher') {
+            $array_data['is_right'] = $this->is_right;
+        }
+
+        return $array_data;
     }
 }
