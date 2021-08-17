@@ -72,8 +72,8 @@
         </b-form-group>
 
         <div class='button-box'>
-          <b-button @click="addNewQuestion()">Cadastrar Questão</b-button>
-          <b-button type="reset" variant="danger">Cancelar</b-button>
+          <b-button @click="addNewQuestion()" :disabled="disableNewQuestion">Cadastrar Questão</b-button>
+          <b-button type="reset" variant="danger" @click="removeQuestion()">Remover Questão</b-button>
         </div>
       </div>
       <div class="pagination-hand">
@@ -125,7 +125,7 @@ const token = Cookie.getToken();
         }],
         exam: [],
         newCategory: '',
-        currentQuestionIndex: 1,
+        currentQuestionIndex: 0,
         questionsSize: 1,
       }
     },
@@ -143,10 +143,13 @@ const token = Cookie.getToken();
 
     watch: {
       currentQuestionIndex(newValue) {
-        if (true) {
-          console.log(newValue);
-        }
-        // this.currentQuestion = this.form.questions[newValue];
+        // this.disableNewQuestion = newValue !== this.form.questions.length;
+      },
+    },
+
+    computed: {
+      disableNewQuestion() {
+        return this.currentQuestionIndex !== this.form.questions.length;
       },
     },
 
@@ -199,6 +202,7 @@ const token = Cookie.getToken();
 
       changeQuestion(idx) {
         this.currentQuestion = this.form.questions[idx];
+        this.currentQuestionIndex = idx;
       },
 
       addChoiceField() {
@@ -210,6 +214,12 @@ const token = Cookie.getToken();
 
       addNewQuestion() {
         let fail = false;
+
+        // verificar se currentQuestion já tá em form.questions
+        if (true) {
+          console.log(this.currentQuestion);
+          console.log(this.form.questions);
+        }
 
         if (this.form.category) {
           this.showCategory = false;
@@ -243,10 +253,14 @@ const token = Cookie.getToken();
         if (!fail) {
           let aux = Object.assign({}, this.currentQuestion);
           this.form.questions.push(aux);
-          this.currentQuestionIndex++;
-          this.questionsSize++;
+          this.currentQuestionIndex = this.form.questions.length;
           this.resetForm();
         }
+      },
+
+      removeQuestion() {
+        this.form.questions.splice(this.currentQuestionIndex, 1);
+        this.currentQuestionIndex = this.form.questions.length;
       },
 
       removeChoice(index) {
