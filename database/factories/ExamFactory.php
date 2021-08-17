@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Category;
 use App\Models\Exam;
+use App\Models\Subject;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ExamFactory extends Factory
@@ -25,6 +26,7 @@ class ExamFactory extends Factory
         return [
             // 'score' => $this->faker->numberBetween(0, 10),
             'category_id' => Category::factory()->create()->id,
+            'subject_id' => Subject::factory()->create()->id,
             'title' => $this->faker->title,
             'published' => $this->faker->boolean(),
         ];
