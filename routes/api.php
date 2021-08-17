@@ -33,11 +33,7 @@ Route::prefix('me')->group(
 Route::middleware('auth:sanctum')->group(
     function () {
         Route::get('/users', [UserController::class, 'index']);
-        Route::post('/exams', [ExamController::class, 'store']);
-        Route::get('/exams', [ExamController::class, 'index']);
-        Route::get('/exams/{exam}', [ExamController::class, 'show']);
-        Route::patch('/exams/{exam}', [ExamController::class, 'update']);
-        Route::delete('/exams/{exam}', [ExamController::class, 'destroy']);
+        Route::apiResource('exams', ExamController::class);
         Route::get('/categories', [CategoryController::class, 'index']);
         Route::post('/takeexam', [UserController::class, 'takeExam']);
         Route::get('/grades', [UserController::class, 'grades']);
