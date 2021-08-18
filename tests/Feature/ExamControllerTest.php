@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Category;
 use App\Models\Choice;
 use App\Models\Exam;
 use App\Models\Question;
@@ -301,5 +302,99 @@ class ExamControllerTest extends TestCase
                 ]
             )
             ->assertStatus(200);
+    }
+
+    public function testATeacherCanUpdateAnEntireExam()
+    {
+        $this->withoutExceptionHandling();
+        $teacher = User::factory()->teacher()->create();
+        $subject = Subject::factory()->create(
+            [
+                'teacher_id' => $teacher->id,
+            ]
+        );
+        $category = Category::factory()->create();
+        $exam = Exam::factory()->create(
+            [
+                'subject_id' => $subject->id,
+                'category_id' => $category->id,
+            ]
+        );
+        $question = Question::factory()->create();
+
+        $exam->questions()->attach($question->id);
+
+        $choice = Choice::factory()->create(
+            [
+                'question_id' => $question->id,
+            ]
+        );
+        $payload = [
+            'form' => [
+                'category' => 'categoria',
+                'title' => 'titulo do exame',
+                'questions' => [
+                    [
+                        'id' => $question->id,
+                        'title' => 'titulo',
+                        'explanation' => 'explicacao',
+                        'choices' => [
+                            [
+                                'description' => 'descrição',
+                                'is_right' => 'true',
+                                'id' => $choice->id,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        Sanctum::actingAs($teacher);
+        $this->json('PATCH', "api/exams/$exam->id", $payload)
+            ->assertJson(
+                [
+                    'status' => 'ok',
+                ]
+            )
+            ->assertStatus(200);
+
+        $exam->refresh();
+
+        $this->assertDatabaseHas(
+            (new Category)->getTable(),
+            [
+                'name' => 'categoria',
+            ]
+        );
+
+        $this->assertEquals('categoria', $exam->category->name);
+
+        $this->assertDatabaseHas(
+            (new Exam)->getTable(),
+            [
+                'id' => $exam->id,
+                'subject_id' => $subject->id,
+                'title' => 'titulo do exame',
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            (new Question)->getTable(),
+            [
+                'id' => 1,
+                'title' => 'titulo',
+                'explanation' => 'explicação',
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            (new Choice)->getTable(),
+            [
+                'id' => 1,
+                'question_id' => 1,
+                'description' => 'descrição',
+                'is_right' => 'true',
+            ]
+        );
     }
 }
