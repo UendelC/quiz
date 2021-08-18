@@ -112,6 +112,18 @@ class ExamController extends Controller
                 $exam->update(
                     ['title' => $request['form']['title']]
                 );
+
+                if (gettype($request['form']['category']) == 'string') {
+                    $category = Category::create(
+                        [
+                            'name' => $request['form']['category'],
+                        ]
+                    );
+
+                    $exam->category()->associate($category);
+
+                    $exam->save();
+                }
             } else {
                 $exam->update(
                     [
