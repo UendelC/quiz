@@ -190,11 +190,21 @@ const token = Cookie.getToken();
                 Authorization: 'Bearer ' + token
               }
             }).then( response => {
-              this.$swal('Pergunta cadastrada com sucesso');
+              this.$swal(
+                {
+                  title: 'Pergunta cadastrada com sucesso',
+                  icon: 'success',
+                });
               this.resetForm();
               this.form.questions = [];
             });
           }
+        } else {
+          this.$swal({
+            icon: 'error',
+            title: 'Cadastro inválido',
+            text: 'Você deve adicionar pelo menos uma pergunta',
+          });
         }
       },
 
@@ -243,12 +253,20 @@ const token = Cookie.getToken();
         }
 
         if (this.currentQuestion.choices.length <= 1) {
-          this.$swal('Você deve cadastrar ao menos duas alternativas');
+          this.$swal({
+            text: 'Você deve cadastrar ao menos duas alternativas',
+            icon: 'error',
+            title: 'Cadastro inválido',
+          });
           fail = true;
         }
 
         if (this.currentQuestion.choices.some(item => item.description.length === 0)) {
-          this.$swal('Todas as alternativas devem ter seus textos');
+          this.$swal({
+            text: 'Todas as alternativas devem ter seus textos',
+            icon: 'error',
+            title: 'Cadastro inválido',
+          });
           fail = true;
         }
 
@@ -258,12 +276,20 @@ const token = Cookie.getToken();
         );
 
         if (amountOfRightChoices === 0) {
-          this.$swal('Ao menos uma alternativa deve estar correta');
+          this.$swal({
+            text: 'Ao menos uma alternativa deve estar correta',
+            icon: 'error',
+            title: 'Cadastro inválido',
+          });
           fail = true;
         }
 
         if (amountOfRightChoices > 1) {
-          this.$swal('Apenas uma alternativa deve ser correta');
+          this.$swal({
+            text: 'Apenas uma alternativa deve estar correta',
+            icon: 'error',
+            title: 'Cadastro inválido',
+          });
           fail = true;
         }
 
