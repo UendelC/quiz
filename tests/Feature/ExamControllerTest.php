@@ -132,7 +132,7 @@ class ExamControllerTest extends TestCase
             'title' => 'titulo do exame',
             'questions' => [
                 [
-                    'question' => 'titulo',
+                    'title' => 'titulo',
                     'explanation' => 'explicação',
                     'choices' => [
                         [
