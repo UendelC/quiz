@@ -183,20 +183,30 @@ const token = Cookie.getToken();
               },
               form,
             },
-            );
+            ).then(response => {
+              this.$swal({
+                title: 'Sucesso!',
+                text: 'Avaliação atualizada com sucesso!',
+                icon: 'success',
+              }).then(() => {
+                this.$router.push({name: 'exam-management'});
+              });
+            });
           } else {
             axios.post('api/exams', this.form, {
               headers: {
                 Authorization: 'Bearer ' + token
               }
             }).then( response => {
+              this.resetForm();
+              this.form.questions = [];
               this.$swal(
                 {
                   title: 'Pergunta cadastrada com sucesso',
                   icon: 'success',
+                }).then( () => {
+                  this.$router.push({name: 'exam-management'});
                 });
-              this.resetForm();
-              this.form.questions = [];
             });
           }
         } else {
@@ -232,6 +242,18 @@ const token = Cookie.getToken();
             choices: [],
           };
           this.currentQuestionIndex = idx;
+
+          this.$swal.mixin(
+            {
+              toast: true,
+              position: 'bottom-right',
+              showConfirmButton: false,
+              timer: 3000,
+            }
+          ).fire({
+            icon: 'success',
+            title: 'Pergunta salva com sucesso',
+          });
         } else {
           this.currentQuestionIndex = idx;
           this.currentQuestion = this.form.questions[idx];
@@ -297,13 +319,45 @@ const token = Cookie.getToken();
           let aux = Object.assign({}, this.currentQuestion);
           this.form.questions.push(aux);
           this.currentQuestionIndex = this.form.questions.length;
+
+          this.$swal.mixin(
+            {
+              toast: true,
+              position: 'bottom-right',
+              showConfirmButton: false,
+              timer: 3000,
+            }
+          ).fire({
+            icon: 'success',
+            title: 'Pergunta cadastrada com sucesso',
+          });
           this.resetForm();
         }
       },
 
       removeQuestion() {
-        this.form.questions.splice(this.currentQuestionIndex, 1);
+        let removed = this.form.questions.splice(this.currentQuestionIndex, 1);
         this.currentQuestionIndex = this.form.questions.length;
+
+        if (removed.length > 0) {
+          this.$swal.mixin(
+            {
+              toast: true,
+              position: 'bottom-right',
+              showConfirmButton: false,
+              timer: 3000,
+            }
+          ).fire({
+            icon: 'info',
+            title: 'Pergunta removida',
+          });
+        } else {
+          this.$swal({
+            icon: 'error',
+            title: 'Remoção inválida',
+            text: 'Não há questão selecionada para remoção',
+          });
+        }
       },
 
       removeChoice(index) {
