@@ -108,11 +108,17 @@ class ExamController extends Controller
     public function update(Request $request, Exam $exam)
     {
         if ($exam->users()->count() == 0) {
-            $exam->update(
-                [
-                    'published' => $request->published,
-                ]
-            );
+            if (isset($request['form'])) {
+                $exam->update(
+                    ['title' => $request['form']['title']]
+                );
+            } else {
+                $exam->update(
+                    [
+                        'published' => $request->published,
+                    ]
+                );
+            }
 
             return response()->json(
                 [
