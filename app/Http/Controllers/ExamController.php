@@ -80,7 +80,7 @@ class ExamController extends Controller
         foreach ($questions as $question) {
             $saved_question = Question::create(
                 [
-                    'title' => $question['question'],
+                    'title' => $question['title'],
                     'explanation' => $question['explanation'],
                 ]
             );
