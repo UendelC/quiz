@@ -72,7 +72,8 @@
         </b-form-group>
 
         <div class='button-box'>
-          <b-button @click="addNewQuestion()" :disabled="disableNewQuestion">Cadastrar Questão</b-button>
+          <b-button @click="addNewQuestion()" v-if="!disableNewQuestion">Cadastrar Questão</b-button>
+          <b-button @click="changeQuestion(form.questions.length)" v-else>Cadastrar Nova Questão</b-button>
           <b-button type="reset" variant="danger" @click="removeQuestion()">Remover Questão</b-button>
         </div>
       </div>
@@ -87,7 +88,7 @@
           {{ idx + 1 }}
         </b-button>
       </div>
-      <b-button type="submit" variant="primary">Finalizar Cadastro de Avaliação</b-button>
+      <b-button @click="onSubmit" variant="primary">Finalizar Cadastro de Avaliação</b-button>
     </b-form>
   </div>
 </div>
@@ -168,19 +169,32 @@ const token = Cookie.getToken();
           this.showCategory = false;
         }
 
-        let aux = Object.assign({}, this.currentQuestion);
-        this.form.questions.push(aux);
+        if (this.currentQuestion.choices.length > 0 && !this.$route.params.exam_id) {
+          let aux = Object.assign({}, this.currentQuestion);
+          this.form.questions.push(aux);
+        }
 
         if (this.form.questions.length >= 1) {
-          axios.post('api/exams', this.form, {
-            headers: {
-              Authorization: 'Bearer ' + token
-            }
-          }).then( response => {
-            this.$swal('Pergunta cadastrada com sucesso');
-            this.resetForm();
-            this.form.questions = [];
-          });
+          if (this.$route.params.exam_id) {
+            let form = this.form;
+            axios.patch(`/api/exams/${this.$route.params.exam_id}`, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+              form,
+            },
+            );
+          } else {
+            axios.post('api/exams', this.form, {
+              headers: {
+                Authorization: 'Bearer ' + token
+              }
+            }).then( response => {
+              this.$swal('Pergunta cadastrada com sucesso');
+              this.resetForm();
+              this.form.questions = [];
+            });
+          }
         }
       },
 
@@ -201,8 +215,17 @@ const token = Cookie.getToken();
       },
 
       changeQuestion(idx) {
-        this.currentQuestion = this.form.questions[idx];
-        this.currentQuestionIndex = idx;
+        if (idx === this.form.questions.length) {
+          this.currentQuestion = {
+            title: '',
+            explanation: '',
+            choices: [],
+          };
+          this.currentQuestionIndex = idx;
+        } else {
+          this.currentQuestionIndex = idx;
+          this.currentQuestion = this.form.questions[idx];
+        }
       },
 
       addChoiceField() {
@@ -214,12 +237,6 @@ const token = Cookie.getToken();
 
       addNewQuestion() {
         let fail = false;
-
-        // verificar se currentQuestion já tá em form.questions
-        if (true) {
-          console.log(this.currentQuestion);
-          console.log(this.form.questions);
-        }
 
         if (this.form.category) {
           this.showCategory = false;
