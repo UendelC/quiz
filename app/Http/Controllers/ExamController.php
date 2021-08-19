@@ -113,7 +113,7 @@ class ExamController extends Controller
                     ['title' => $request['form']['title']]
                 );
 
-                //remove questions
+                $exam->questions()->detach();
 
                 if (gettype($request['form']['category']) == 'string') {
                     $category = Category::create(
@@ -134,12 +134,15 @@ class ExamController extends Controller
 
                 foreach ($request['form']['questions'] as $question) {
                     if (isset($question['id'])) {
-                        Question::find($question['id'])->update(
+                        $question_to_update = Question::findOrFail($question['id']);
+                        $question_to_update->update(
                             [
                                 'title' => $question['title'],
                                 'explanation' => $question['explanation'],
                             ]
                         );
+
+                        $exam->questions()->attach($question_to_update->id);
                     } else {
                         $new_question = Question::create(
                             [
@@ -148,27 +151,58 @@ class ExamController extends Controller
                             ]
                         );
 
+                        $question['id'] = $new_question->id;
+
                         $exam->questions()->attach($new_question);
                     }
 
-                    // remove choices
+                    $exam->questions()->each(
+                        function ($question_to_delete_choice) {
+                            $question_to_delete_choice->choices->each(
+                                function ($choice_to_dissociate) {
+                                    $choice_to_dissociate
+                                        ->question()
+                                        ->dissociate()
+                                        ->save();
+                                }
+                            );
+                        }
+                    );
 
                     foreach ($question['choices'] as $choice) {
                         if (isset($choice['id'])) {
-                            Choice::find($choice['id'])->update(
+                            $choice_to_update = Choice::findOrFail($choice['id']);
+                            $choice_to_update->update(
                                 [
                                     'description' => $choice['description'],
                                     'is_right' => $choice['is_right'],
                                 ]
                             );
+
+                            $question_to_associate = Question::findOrFail(
+                                $question['id']
+                            );
+                            $choice_to_update
+                                ->question()
+                                ->associate($question_to_associate->id)
+                                ->save();
                         } else {
-                            Choice::create(
+                            $new_choice = Choice::create(
                                 [
                                     'description' => $choice['description'],
                                     'is_right' => $choice['is_right'],
-                                    'question_id' => $new_question->id,
+                                    'question_id' => $question['id'],
                                 ]
                             );
+
+                            $question_to_associate = Question::findOrFail(
+                                $question['id']
+                            );
+
+                            $new_choice
+                                ->question()
+                                ->associate($question_to_associate->id)
+                                ->save();
                         }
                     }
                 }
