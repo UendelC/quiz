@@ -383,7 +383,7 @@ class ExamControllerTest extends TestCase
             [
                 'id' => 1,
                 'title' => 'titulo',
-                'explanation' => 'explicação',
+                'explanation' => 'explicacao',
             ]
         );
 
