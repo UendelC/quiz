@@ -113,6 +113,8 @@ class ExamController extends Controller
                     ['title' => $request['form']['title']]
                 );
 
+                //remove questions
+
                 if (gettype($request['form']['category']) == 'string') {
                     $category = Category::create(
                         [
@@ -148,6 +150,8 @@ class ExamController extends Controller
 
                         $exam->questions()->attach($new_question);
                     }
+
+                    // remove choices
 
                     foreach ($question['choices'] as $choice) {
                         if (isset($choice['id'])) {
