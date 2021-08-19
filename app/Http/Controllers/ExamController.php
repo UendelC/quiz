@@ -123,6 +123,50 @@ class ExamController extends Controller
                     $exam->category()->associate($category);
 
                     $exam->save();
+                } elseif (gettype($request['form']['category']) == 'integer') {
+                    $exam->category()->associate(
+                        Category::findOrFail($request['form']['category'])
+                    );
+                    $exam->save();
+                }
+
+                foreach ($request['form']['questions'] as $question) {
+                    if (isset($question['id'])) {
+                        Question::find($question['id'])->update(
+                            [
+                                'title' => $question['title'],
+                                'explanation' => $question['explanation'],
+                            ]
+                        );
+                    } else {
+                        $new_question = Question::create(
+                            [
+                                'title' => $question['title'],
+                                'explanation' => $question['explanation'],
+                            ]
+                        );
+
+                        $exam->questions()->attach($new_question);
+                    }
+
+                    foreach ($question['choices'] as $choice) {
+                        if (isset($choice['id'])) {
+                            Choice::find($choice['id'])->update(
+                                [
+                                    'description' => $choice['description'],
+                                    'is_right' => $choice['is_right'],
+                                ]
+                            );
+                        } else {
+                            Choice::create(
+                                [
+                                    'description' => $choice['description'],
+                                    'is_right' => $choice['is_right'],
+                                    'question_id' => $new_question->id,
+                                ]
+                            );
+                        }
+                    }
                 }
             } else {
                 $exam->update(
