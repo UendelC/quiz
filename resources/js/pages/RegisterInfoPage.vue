@@ -169,9 +169,15 @@ const token = Cookie.getToken();
           this.showCategory = false;
         }
 
-        if (this.currentQuestion.choices.length > 0 && !this.$route.params.exam_id) {
-          let aux = Object.assign({}, this.currentQuestion);
-          this.form.questions.push(aux);
+        if (this.currentQuestion.choices.length > 0) {
+          this.$swal(
+            {
+              text: 'Questão escrita mas não cadastrada!',
+              icon: 'warning',
+              title: 'Aviso',
+            }
+          );
+          return;
         }
 
         if (this.form.questions.length >= 1) {
