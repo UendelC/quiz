@@ -23,8 +23,9 @@ class CategoryController extends Controller
             ->lecture
             ->exams()
             ->with(['category:id,name'])
-            ->get()->toArray();
+            ->get();
 
-        dd($categories);
+        dd($categories->toArray());
+        return CategoryResource::collection($categories);
     }
 }
