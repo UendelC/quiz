@@ -113,6 +113,19 @@ class ExamController extends Controller
                     ['title' => $request['form']['title']]
                 );
 
+                $exam->questions()->each(
+                    function ($question_to_delete_choice) {
+                        $question_to_delete_choice->choices()->each(
+                            function ($choice_to_dissociate) {
+                                $choice_to_dissociate
+                                    ->question()
+                                    ->dissociate()
+                                    ->save();
+                            }
+                        );
+                    }
+                );
+
                 $exam->questions()->detach();
 
                 if (gettype($request['form']['category']) == 'string') {
@@ -156,19 +169,6 @@ class ExamController extends Controller
                         $exam->questions()->attach($new_question);
                     }
 
-                    $exam->questions()->each(
-                        function ($question_to_delete_choice) {
-                            $question_to_delete_choice->choices->each(
-                                function ($choice_to_dissociate) {
-                                    $choice_to_dissociate
-                                        ->question()
-                                        ->dissociate()
-                                        ->save();
-                                }
-                            );
-                        }
-                    );
-
                     foreach ($question['choices'] as $choice) {
                         if (isset($choice['id'])) {
                             $choice_to_update = Choice::findOrFail($choice['id']);
@@ -176,6 +176,7 @@ class ExamController extends Controller
                                 [
                                     'description' => $choice['description'],
                                     'is_right' => $choice['is_right'],
+                                    'question_id' => $question['id'],
                                 ]
                             );
 
