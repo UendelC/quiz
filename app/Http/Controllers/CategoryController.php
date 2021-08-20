@@ -14,4 +14,17 @@ class CategoryController extends Controller
 
         return CategoryResource::collection($categories);
     }
+
+    public function indexTeacher()
+    {
+        $user = auth()->user();
+
+        $categories = $user
+            ->lecture
+            ->exams()
+            ->with(['category:id,name'])
+            ->get()->toArray();
+
+        dd($categories);
+    }
 }
