@@ -31,6 +31,7 @@ class ExamSeeder extends Seeder
                             [
                                 'category_id' => $category->id,
                                 'subject_id' => $subjects_id->random(),
+                                'published' => true,
                             ]
                         )
                     ]
@@ -40,9 +41,19 @@ class ExamSeeder extends Seeder
 
         $exams = Exam::all();
 
-        $exams->each(
-            function ($exam) use ($users) {
-                $exam->users()->attach($users->random());
+        // $exams->each(
+        //     function ($exam) use ($users) {
+        //         $exam->users()->attach($users->random());
+        //     }
+        // );
+
+        User::whereIn('id', $users->toArray())->get()->each(
+            function ($user) use ($exams) {
+                $exams->each(
+                    function ($exam) use ($user) {
+                        $user->exams()->attach($exam->id, ['score' => rand(0, 10)]);
+                    }
+                );
             }
         );
         // User::where('type', 'participant')
