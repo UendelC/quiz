@@ -13,12 +13,13 @@
             :options="participants"
             :multiple="true"
             :taggable="false"
-            select-label="Pressione enter para selecionar"
-            selected-label="Selecionado"
-            deselect-label="Pressione enter para remover"
+            select-label=""
+            selected-label=""
+            deselect-label=""
             noResult="Nenhum elemento encontrado. Busque novamente"
             :loading="false"
             :disabled="false"
+            @input="renderReport()"
           >
             <span slot="noResult">Oops! Nenhum element encontrado. Busque novamente.</span>
             <span slot="noOptions">Lista vazia</span>
@@ -34,12 +35,13 @@
             :options="categories"
             :multiple="true"
             :taggable="false"
-            select-label="Pressione enter para selecionar"
-            selected-label="Selecionado"
-            deselect-label="Pressione enter para remover"
+            select-label=""
+            selected-label=""
+            deselect-label=""
             noResult="Nenhum elemento encontrado. Busque novamente"
             :loading="false"
             :disabled="false"
+            @input="renderReport()"
           >
             <span slot="noResult">Oops! Nenhum element encontrado. Busque novamente.</span>
             <span slot="noOptions">Lista vazia</span>
@@ -55,12 +57,13 @@
             :options="exams"
             :multiple="true"
             :taggable="false"
-            select-label="Pressione enter para selecionar"
-            selected-label="Selecionado"
-            deselect-label="Pressione enter para remover"
+            select-label=""
+            selected-label=""
+            deselect-label=""
             noResult="Nenhum elemento encontrado. Busque novamente"
             :loading="false"
             :disabled="false"
+            @input="renderReport()"
           >
             <span slot="noResult">Oops! Nenhum element encontrado. Busque novamente.</span>
             <span slot="noOptions">Lista vazia</span>
@@ -138,20 +141,56 @@ export default {
           },
         }).then( response => {
           let categories = response.data.data.map(item => {
-            return { text: item.name, value: item.id};
+            return { name: item.name, code: item.id};
           });
 
-          this.options = [...this.options, ...categories];
+          this.categories = [...categories];
         });
     },
 
     getParticipants() {
+      axios.get('api/participants-from-teacher', {
+          headers: {
+            Authorization: 'Bearer ' + token
+          },
+        }).then( response => {
+          let participants = response.data.data.map(item => {
+            return { name: item.name, code: item.id};
+          });
 
+          this.participants = [...participants];
+        });
     },
 
     getExams() {
+      axios.get('api/exams-from-teacher', {
+          headers: {
+            Authorization: 'Bearer ' + token
+          },
+        }).then( response => {
+          let exams = response.data.map(item => {
+            return { name: item.title, code: item.id};
+          });
 
+          this.exams = [...exams];
+        });
     },
+
+    renderReport() {
+      let data = {
+        participants: this.selectedParticipants,
+        categories: this.selectedCategories,
+        exams: this.selectedExams,
+        date: this.date,
+      };
+
+      axios.post('api/report', data, {
+        headers: {
+          Authorization: 'Bearer ' + token
+        },
+      }).then( response => {
+        this.report = response.report;
+      });
   },
 }
 </script>
