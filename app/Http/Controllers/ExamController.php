@@ -54,6 +54,7 @@ class ExamController extends Controller
             $exam = $user
                 ->lecture
                 ->exams()
+                ->wherePublished(true)
                 ->get(['title', 'id']);
 
             return response()->json($exam);
