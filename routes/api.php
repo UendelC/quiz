@@ -36,8 +36,11 @@ Route::middleware('auth:sanctum')->group(
         Route::apiResource('exams', ExamController::class);
         Route::get('/categories', [CategoryController::class, 'index']);
         Route::get('/categories-from-teacher', [CategoryController::class, 'indexTeacher']);
+        Route::get('/participants-from-teacher', [UserController::class, 'indexTeacher']);
+        Route::get('/exams-from-teacher', [ExamController::class, 'indexTeacher']);
         Route::post('/takeexam', [UserController::class, 'takeExam']);
         Route::get('/grades', [UserController::class, 'grades']);
+        Route::post('/report', [ReportController::class, 'process']);
     }
 );
 
