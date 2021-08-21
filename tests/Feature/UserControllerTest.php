@@ -23,7 +23,7 @@ class UserControllerTest extends TestCase
         $users = User::factory()->count(3)->create();
 
         Sanctum::actingAs($users[0]);
-        
+
         $response = $this->json('GET', 'api/users');
         $response->assertOk();
         $response->assertJson($users->toArray());
@@ -37,9 +37,9 @@ class UserControllerTest extends TestCase
             'type' => 'participant',
             'password' => '123456',
         ];
-          
+
         $response = $this->json('POST', 'api/register', $user_data);
-        
+
         $user = User::first();
         $response->assertStatus(200);
         $response->assertJSON(
