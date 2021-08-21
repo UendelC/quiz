@@ -22,6 +22,26 @@ class UserController extends Controller
         return User::all();
     }
 
+    public function indexTeacher()
+    {
+        $user = auth()->user();
+
+        $participants = $user
+            ->lecture
+            ->exams()
+            ->with(['users:id,name'])
+            ->get()
+            ->map(
+                function ($exam) {
+                    return $exam->users;
+                }
+            )
+            ->flatten()
+            ->unique('id');
+
+        return UserResource::collection($participants);
+    }
+
     public function store(Request $request)
     {
         $request->validate(
