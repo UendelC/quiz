@@ -46,6 +46,21 @@ class ExamController extends Controller
         }
     }
 
+    public function indexTeacher()
+    {
+        $user = auth()->user();
+
+        if ($user->type == 'teacher') {
+            $exam = $user
+                ->lecture
+                ->exams()
+                ->get(['title', 'id']);
+
+            return response()->json($exam);
+        }
+
+    }
+
     public function store(Request $request)
     {
         $request->validate(
