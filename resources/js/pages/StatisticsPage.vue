@@ -191,6 +191,7 @@ export default {
       }).then( response => {
         this.report = response.report;
       });
+    },
   },
 }
 </script>
