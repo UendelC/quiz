@@ -23,9 +23,14 @@ class CategoryController extends Controller
             ->lecture
             ->exams()
             ->with(['category:id,name'])
-            ->get();
+            ->get()
+            ->map(
+                function ($exam) {
+                    return $exam->category;
+                }
+            )
+            ->unique('id');
 
-        dd($categories->toArray());
         return CategoryResource::collection($categories);
     }
 }
