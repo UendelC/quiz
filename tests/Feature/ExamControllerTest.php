@@ -397,4 +397,33 @@ class ExamControllerTest extends TestCase
             ]
         );
     }
+
+    public function testATeacherCanGetTheirExams()
+    {
+        $teacher = User::factory()->teacher()->create();
+        $subject = Subject::factory()->create(
+            [
+                'teacher_id' => $teacher->id,
+            ]
+        );
+
+        $exam = Exam::factory()->create(
+            [
+                'subject_id' => $subject->id,
+            ]
+        );
+
+        Sanctum::actingAs($teacher);
+
+        $this->json('GET', 'api/exams-from-teacher')
+            ->assertJson(
+                [
+                    [
+                        'id' => $exam->id,
+                        'title' => $exam->title,
+                    ],
+                ],
+            )
+            ->assertStatus(200);
+    }
 }
