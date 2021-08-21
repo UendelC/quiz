@@ -21,7 +21,6 @@ class CategoryControllerTest extends TestCase
      */
     public function testATeacherCanGetTheirCategories()
     {
-        $this->withoutExceptionHandling();
         $teacher = User::factory()->teacher()->create();
 
         $subject = Subject::factory()->create(['teacher_id' => $teacher->id]);
@@ -41,7 +40,7 @@ class CategoryControllerTest extends TestCase
             ->assertStatus(200)
             ->assertJson(
                 [
-                    'categories' => [
+                    'data' => [
                         [
                             'id' => $category_from_teacher->id,
                             'name' => $category_from_teacher->name,
@@ -51,7 +50,7 @@ class CategoryControllerTest extends TestCase
             )
             ->assertJsonMissing(
                 [
-                    'categories' => [
+                    'data' => [
                         [
                             'id' => $another_category->id,
                             'name' => $another_category->name,
