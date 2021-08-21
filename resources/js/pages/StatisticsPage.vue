@@ -177,12 +177,23 @@ export default {
     },
 
     renderReport() {
-      let data = {
-        participants: this.selectedParticipants,
-        categories: this.selectedCategories,
-        exams: this.selectedExams,
-        date: this.date,
-      };
+      let data = {};
+
+      if (this.selectedParticipants.length > 0) {
+        data.participants = this.selectedParticipants.map(item => item.code);
+      }
+
+      if (this.selectedCategories.length > 0) {
+        data.categories = this.selectedCategories.map(item => item.code);
+      }
+
+      if (this.selectedExams.length > 0) {
+        data.exams = this.selectedExams.map(item => item.code);
+      }
+
+      if (this.date.length > 0) {
+        data.date = this.date[0];
+      }
 
       axios.post('api/report', data, {
         headers: {
