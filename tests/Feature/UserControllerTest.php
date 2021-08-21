@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Models\Exam;
+use App\Models\Subject;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -76,5 +78,48 @@ class UserControllerTest extends TestCase
             ]
         );
 
+    }
+
+    public function testATeacherCanGetTheirParticipants()
+    {
+        $this->withoutExceptionHandling();
+        $teacher = User::factory()->teacher()->create();
+
+        $subject = Subject::factory()->create(['teacher_id' => $teacher->id]);
+        $participant_from_teacher = User::factory()->participant()->create();
+        $another_participant = User::factory()->participant()->create();
+
+        $exam = Exam::factory()->create(
+            [
+                'subject_id' => $subject->id,
+            ]
+        );
+
+        $exam->users()->attach($participant_from_teacher);
+
+        Sanctum::actingAs($teacher);
+
+        $this->json('GET', '/api/participants-from-teacher')
+            ->assertStatus(200)
+            ->assertJson(
+                [
+                    'data' => [
+                        [
+                            'id' => $participant_from_teacher->id,
+                            'name' => $participant_from_teacher->name,
+                        ],
+                    ],
+                ]
+            )
+            ->assertJsonMissing(
+                [
+                    'data' => [
+                        [
+                            'id' => $another_participant->id,
+                            'name' => $another_participant->name,
+                        ],
+                    ],
+                ]
+            );
     }
 }
