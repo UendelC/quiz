@@ -212,8 +212,8 @@ export default {
       },
       report: {
         mean_score: 0,
-        max_score: 0,
-        min_score: 0,
+        scores: [],
+        standard_deviation: 0,
       },
     }
   },
