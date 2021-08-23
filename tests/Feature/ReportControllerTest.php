@@ -39,20 +39,31 @@ class ReportControllerTest extends TestCase
         );
 
         $exam->users()->attach($participant->id, ['score' => 10]);
-        $exam->users()->attach($another_participant->id, ['score' => 5]);
+        $exam->users()->attach($another_participant->id, ['score' => 8]);
+
+        $another_exam = Exam::factory()->create(
+            [
+                'subject_id' => $subject->id,
+                'category_id' => $category->id,
+            ]
+        );
+
+        $another_exam->users()->attach($participant->id, ['score' => 4]);
+        $another_exam->users()->attach($another_participant->id, ['score' => 0]);
 
         Sanctum::actingAs($teacher);
 
-        $response = $this->json('POST', 'api/report')
-            ->dump()
+        $this->json('POST', 'api/report')
             ->assertStatus(200)
             ->assertJson(
                 [
-                    'mean_grade' => 7.5,
-                    'standard_deviation' => 2.5,
+                    'mean_score' => 5.5,
+                    'standard_deviation' => 3.84,
                     'scores' => [
-                        10,
-                        5,
+                        '10.0',
+                        '8.0',
+                        '4.0',
+                        '0.0',
                     ],
                 ]
             );
