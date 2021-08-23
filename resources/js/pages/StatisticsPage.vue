@@ -82,6 +82,90 @@
           </flat-pickr>
         </b-col>
       </b-row>
+      <b-row>
+        <b-col>
+          <cds-totalizer
+            variant="green"
+            iconSide="right"
+          >
+            <template slot="icon">
+              <b-icon></b-icon>
+            </template>
+            <template slot="subtitle">
+              Nota média
+            </template>
+            <template slot="value">
+              {{ report.mean_score }}
+            </template>
+          </cds-totalizer>
+        </b-col>
+        <b-col>
+          <cds-totalizer
+            variant="green"
+            iconSide="right"
+          >
+            <template slot="icon">
+              <b-icon icon="plus"></b-icon>
+            </template>
+            <template slot="subtitle">
+              Nota máxima
+            </template>
+            <template slot="value">
+              <!-- gets the greatest value from report.scores -->
+              {{ report.scores.reduce((max, score) => Math.max(max, score), 0) }}
+            </template>
+          </cds-totalizer>
+        </b-col>
+        <b-col>
+          <cds-totalizer
+            variant="green"
+            iconSide="right"
+          >
+            <template slot="icon">
+              <b-icon icon="minus"></b-icon>
+            </template>
+            <template slot="subtitle">
+              Nota mínima
+            </template>
+            <template slot="value">
+              <!-- gets the lowest value from report.scores -->
+              {{ report.scores.reduce((min, score) => Math.min(min, score), 10) }}
+            </template>
+          </cds-totalizer>
+        </b-col>
+        <b-col>
+          <cds-totalizer
+            variant="green"
+            iconSide="right"
+          >
+            <template slot="icon">
+              <b-icon icon="person-fill"></b-icon>
+            </template>
+            <template slot="subtitle">
+              Número de Avaliações
+            </template>
+            <template slot="value">
+              {{ report.scores.length }}
+            </template>
+          </cds-totalizer>
+        </b-col>
+        <b-col>
+          <cds-totalizer
+            variant="green"
+            iconSide="right"
+          >
+            <template slot="icon">
+              <b-icon icon="graph-up"></b-icon>
+            </template>
+            <template slot="subtitle">
+              Desvio Padrão
+            </template>
+            <template slot="value">
+              {{ report.standard_deviation }}
+            </template>
+          </cds-totalizer>
+        </b-col>
+      </b-row>
     </div>
     <!-- <iframe class="col-md-12" src="https://datastudio.google.com/embed/reporting/8fa71982-e217-42a7-b1cd-a78e7ed8ba3e/page/UxgAC" frameborder="0" style="border:0" allowfullscreen></iframe> -->
   </div>
@@ -94,6 +178,7 @@ import flatPickr from 'vue-flatpickr-component';
 import 'flatpickr/dist/flatpickr.css';
 import { Portuguese } from "flatpickr/dist/l10n/pt.js";
 import Cookie from '../service/cookie';
+import { Line } from 'vue-chartjs';
 
 const token = Cookie.getToken();
 
@@ -102,6 +187,7 @@ export default {
     NavBar,
     Multiselect,
     flatPickr,
+    Line,
   },
 
   data() {
@@ -124,6 +210,11 @@ export default {
         altInput: true,
         locale: Portuguese,
       },
+      report: {
+        mean_score: 0,
+        max_score: 0,
+        min_score: 0,
+      },
     }
   },
 
@@ -131,6 +222,7 @@ export default {
     this.getCategories();
     this.getParticipants();
     this.getExams();
+    this.renderReport();
   },
 
   methods: {
@@ -200,7 +292,7 @@ export default {
           Authorization: 'Bearer ' + token
         },
       }).then( response => {
-        this.report = response.report;
+        this.report = response.data;
       });
     },
   },
