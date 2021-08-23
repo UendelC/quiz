@@ -8,34 +8,20 @@ class ReportController extends Controller
 {
     public function process(Request $request)
     {
-        dump('aqui');
         $teacher = auth()->user();
         $teacher_query = $teacher->lecture->exams();
 
-        if ($request->has('participants')) {
-            dump('com participantes');
-            $teacher_query = $teacher_query
-                ->map(
-                    function ($exam) use ($request) {
-                        $exam
-                            ->users()
-                            ->whereIn('id', $request->participants);
-                        
-                        return $exam;
-                    }
-                );
-
-            dd($teacher_query);
-                // ->whereHas(
-                //     'users',
-                //     function ($user) use ($request) {
-                //         $user->whereIn('id', $request->participants);
-                //     }
-                // );
-        }
+        // if ($request->has('participants')) {
+        //     $teacher_query = $teacher_query
+        //         ->with(
+        //             'users',
+        //             function ($query) use ($request) {
+        //                 $query->whereIn('id', $request->participants);
+        //             }
+        //         );
+        // }
 
         if ($request->has('categories')) {
-            dump('com categorias');
             $teacher_query = $teacher_query
                 ->whereHas(
                     'category',
@@ -46,7 +32,6 @@ class ReportController extends Controller
         }
 
         if ($request->has('exams')) {
-            dump('com exames');
             $teacher_query = $teacher_query
                 ->whereIn('id', $request->exams);
         }
@@ -58,7 +43,23 @@ class ReportController extends Controller
         }
 
         $report = $teacher_query
-            ->with('users')
+            ->when(
+                $request->has('participants'), function ($query) use ($request) {
+                    $query->with(
+                        'users',
+                        function ($query) use ($request) {
+                            $query->whereIn('id', $request->participants);
+                        }
+                    );
+                }
+            )
+            ->when(
+                !$request->has('participants'), function ($query) use ($request) {
+                    $query->with(
+                        'users'
+                    );
+                }
+            )
             ->get()
             ->map(
                 function ($exam) {
@@ -69,24 +70,32 @@ class ReportController extends Controller
                     );
                     $exam->mean_score = $score->avg();
                     $exam->scores = $score->toArray();
-                    $exam->standard_deviation = $this->standardDeviation($score->toArray());
                     return $exam;
                 }
             )
             ->toArray();
 
-        dd($report);
+        $mean_score = array_sum(array_column($report, 'mean_score')) / count($report);
+        // format the mean score to 2 decimal places
+        $mean_score = number_format((float)$mean_score, 2, '.', '');
+
+        $scores = array_column($report, 'scores');
+        $scores = array_merge(...$scores);
+
+        $standard_deviation = $this->standard_deviation($scores);
+
+        $standard_deviation = number_format($standard_deviation, 2, '.', '');
 
         return response()->json(
             [
-                'mean_score' => $report['mean_score'],
-                'standard_deviation' => $report['standard_deviation'],
-                'scores' => $report['scores'],
+                'mean_score' => $mean_score,
+                'standard_deviation' => $standard_deviation,
+                'scores' => $scores,
             ]
         );
     }
 
-    private function standardDeviation(array $scores)
+    private function standard_deviation(array $scores)
     {
         $mean = array_sum($scores) / count($scores);
         $variance = array_sum(
