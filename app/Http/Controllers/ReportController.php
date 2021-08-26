@@ -11,16 +11,6 @@ class ReportController extends Controller
         $teacher = auth()->user();
         $teacher_query = $teacher->lecture->exams();
 
-        // if ($request->has('participants')) {
-        //     $teacher_query = $teacher_query
-        //         ->with(
-        //             'users',
-        //             function ($query) use ($request) {
-        //                 $query->whereIn('id', $request->participants);
-        //             }
-        //         );
-        // }
-
         if ($request->has('categories')) {
             $teacher_query = $teacher_query
                 ->whereHas(
