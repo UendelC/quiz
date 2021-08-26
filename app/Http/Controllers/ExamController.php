@@ -60,6 +60,9 @@ class ExamController extends Controller
             return response()->json($exam);
         }
 
+        return [
+            'message' => 'No exams available',
+        ];
     }
 
     public function store(Request $request)
