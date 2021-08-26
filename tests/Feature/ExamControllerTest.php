@@ -400,6 +400,7 @@ class ExamControllerTest extends TestCase
 
     public function testATeacherCanGetTheirExams()
     {
+        $this->withoutExceptionHandling();
         $teacher = User::factory()->teacher()->create();
         $subject = Subject::factory()->create(
             [
