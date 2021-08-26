@@ -72,11 +72,12 @@
         <b-col>
           <label class="typo__label">Período</label>
           <flat-pickr
-            v-model="date"
+            v-model="dates"
             :config="config"
             class="form-control"
             placeholder="Selecione o período"
             name="date"
+            @input="handleReport()"
           >
 
           </flat-pickr>
@@ -203,7 +204,7 @@ export default {
       ],
       categories: [],
       exams: [],
-      date: '',
+      dates: [],
       config: {
         dateFormat: 'Y-m-d',
         mode: 'range',
@@ -283,8 +284,11 @@ export default {
         data.exams = this.selectedExams.map(item => item.code);
       }
 
-      if (this.date.length > 0) {
-        data.date = this.date[0];
+      if (this.dates.length > 0) {
+        let datesFormatted = this.dates.replace(' até ', ',');
+        datesFormatted = datesFormatted.split(',');
+        data.start_date = datesFormatted[0];
+        data.end_date = datesFormatted[1];
       }
 
       axios.post('api/report', data, {
