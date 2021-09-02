@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Exam;
 use App\Models\Subject;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
@@ -217,13 +218,13 @@ class ReportControllerTest extends TestCase
 
     public function testUsersCanGetReportWithDateFilter()
     {
+        $this->withoutExceptionHandling();
         $teacher = User::factory()->teacher()->create();
 
         $participant = User::factory()->participant()->create();
         $another_participant = User::factory()->participant()->create();
 
-        $date = Carbon::now()->subDays(2);
-        $another_date = Carbon::now()->subDays(1);
+        $another_date = Carbon::now()->subDays(15);
 
         $subject = Subject::factory()->create(
             ['teacher_id' => $teacher->id]
@@ -238,23 +239,37 @@ class ReportControllerTest extends TestCase
             ]
         );
 
-        $exam->users()->attach($participant->id, ['score' => 10, 'created_at' => $date]);
-        $exam->users()->attach($another_participant->id, ['score' => 8, 'created_at' => $date]);
-        $exam->users()->attach($participant->id, ['score' => 4, 'created_at' => $another_date]);
-        $exam->users()->attach($another_participant->id, ['score' => 0, 'created_at' => $another_date]);
+        $another_exam = Exam::factory()->create(
+            [
+                'subject_id' => $subject->id,
+                'category_id' => $category->id,
+                'created_at' => $another_date,
+            ]
+        );
+
+        $exam->users()->attach($participant->id, ['score' => 10]);
+        $exam->users()->attach($another_participant->id, ['score' => 8]);
+        $another_exam->users()->attach($participant->id, ['score' => 4]);
+        $another_exam->users()->attach($another_participant->id, ['score' => 0]);
 
         Sanctum::actingAs($teacher);
 
-        $this->json('POST', 'api/report', ['date' => $date->toDateString()])
+        $this->json(
+            'POST',
+            'api/report',
+            [
+                'start_date' => $another_date->subDay()->format('Y-m-d'),
+                'end_date' => $another_date->addDays(2)->format('Y-m-d'),
+            ]
+        )
             ->assertStatus(200)
             ->assertJson(
                 [
-                    'mean_score' => 7.0,
-                    'standard_deviation' => 3.0,
+                    'mean_score' => 2.00,
+                    'standard_deviation' => 2.00,
                     'scores' => [
-                        '10.0',
-                        '8.0',
                         '4.0',
+                        '0.0',
                     ],
                 ]
             );

@@ -26,10 +26,15 @@ class ReportController extends Controller
                 ->whereIn('id', $request->exams);
         }
 
-        if ($request->has('date_from') && $request->has('date_to')) {
-            dump('com datas');
+        if ($request->has('start_date') && $request->has('end_date')) {
             $teacher_query = $teacher_query
-                ->whereDate('date', $request->date); // between
+                ->whereBetween(
+                    'created_at',
+                    [
+                        $request->start_date,
+                        $request->end_date,
+                    ]
+                );
         }
 
         $report = $teacher_query
@@ -64,8 +69,12 @@ class ReportController extends Controller
                 }
             )
             ->toArray();
-
-        $mean_score = array_sum(array_column($report, 'mean_score')) / count($report);
+        
+        if (count($report) > 0) {
+            $mean_score = array_sum(array_column($report, 'mean_score')) / count($report);
+        } else {
+            $mean_score = 0;
+        }
         // format the mean score to 2 decimal places
         $mean_score = number_format((float)$mean_score, 2, '.', '');
 
@@ -87,15 +96,20 @@ class ReportController extends Controller
 
     private function standard_deviation(array $scores)
     {
-        $mean = array_sum($scores) / count($scores);
-        $variance = array_sum(
-            array_map(
-                function ($x) use ($mean) {
-                    return pow($x - $mean, 2);
-                },
-                $scores
-            )
-        ) / count($scores);
+        if (count($scores) > 0) {
+            $mean = array_sum($scores) / count($scores);
+            $variance = array_sum(
+                array_map(
+                    function ($x) use ($mean) {
+                        return pow($x - $mean, 2);
+                    },
+                    $scores
+                )
+            ) / count($scores);
+        } else {
+            $mean = 0;
+            $variance = 0;
+        }
 
         return sqrt($variance);
 
