@@ -77,7 +77,7 @@
             class="form-control"
             placeholder="Selecione o período"
             name="date"
-            @input="handleReport()"
+            @input="renderReport()"
           >
 
           </flat-pickr>
