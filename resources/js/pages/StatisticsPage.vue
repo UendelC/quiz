@@ -77,13 +77,12 @@
             class="form-control"
             placeholder="Selecione o período"
             name="date"
-            @input="renderReport()"
           >
 
           </flat-pickr>
         </b-col>
       </b-row>
-      <b-row>
+      <b-row class='pt-4'>
         <b-col>
           <cds-totalizer
             variant="green"
@@ -168,6 +167,7 @@
         </b-col>
       </b-row>
     </div>
+    <canvas id="report-chart"></canvas>
     <!-- <iframe class="col-md-12" src="https://datastudio.google.com/embed/reporting/8fa71982-e217-42a7-b1cd-a78e7ed8ba3e/page/UxgAC" frameborder="0" style="border:0" allowfullscreen></iframe> -->
   </div>
 </template>
@@ -179,7 +179,7 @@ import flatPickr from 'vue-flatpickr-component';
 import 'flatpickr/dist/flatpickr.css';
 import { Portuguese } from "flatpickr/dist/l10n/pt.js";
 import Cookie from '../service/cookie';
-import { Line } from 'vue-chartjs';
+import Chart from 'chart.js';
 
 const token = Cookie.getToken();
 
@@ -188,7 +188,6 @@ export default {
     NavBar,
     Multiselect,
     flatPickr,
-    Line,
   },
 
   data() {
@@ -224,6 +223,12 @@ export default {
     this.getParticipants();
     this.getExams();
     this.renderReport();
+  },
+
+  watch: {
+    dates: function(newVal, oldVal) {
+      this.renderReport();
+    },
   },
 
   methods: {
@@ -269,6 +274,21 @@ export default {
         });
     },
 
+    renderChart() {
+      const ctx = document.getElementById('report-chart').getContext('2d');
+      const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          // labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+          datasets: [{
+            label: 'Notas',
+            data: this.report.scores,
+          }],
+        },
+        options: this.options
+      });
+    },
+
     renderReport() {
       let data = {};
 
@@ -297,6 +317,7 @@ export default {
         },
       }).then( response => {
         this.report = response.data;
+        this.renderChart();
       });
     },
   },
