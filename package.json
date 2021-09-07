@@ -29,7 +29,7 @@
     "dependencies": {
         "@sysvale/cuida": "^1.22.1",
         "bootstrap-vue": "^2.21.2",
-        "chart.js": "^3.5.1",
+        "chart.js": "^2.9.4",
         "js-cookie": "^2.2.1",
         "vee-validate": "^3.4.5",
         "vue-chartjs": "^3.5.1",
