@@ -26,14 +26,21 @@ class ReportController extends Controller
                 ->whereIn('id', $request->exams);
         }
 
-        if ($request->has('start_date') && $request->has('end_date')) {
+        if ($request->has('start_date')) {
             $teacher_query = $teacher_query
-                ->whereBetween(
+                ->where(
                     'created_at',
-                    [
-                        $request->start_date,
-                        $request->end_date,
-                    ]
+                    '>=',
+                    $request->start_date
+                );
+        }
+
+        if ($request->has('end_date')) {
+            $teacher_query = $teacher_query
+                ->where(
+                    'created_at',
+                    '<=',
+                    $request->end_date
                 );
         }
 
