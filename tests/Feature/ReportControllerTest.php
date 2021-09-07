@@ -218,7 +218,6 @@ class ReportControllerTest extends TestCase
 
     public function testUsersCanGetReportWithDateFilter()
     {
-        $this->withoutExceptionHandling();
         $teacher = User::factory()->teacher()->create();
 
         $participant = User::factory()->participant()->create();

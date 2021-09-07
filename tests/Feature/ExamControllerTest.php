@@ -400,7 +400,6 @@ class ExamControllerTest extends TestCase
 
     public function testATeacherCanGetTheirExams()
     {
-        $this->withoutExceptionHandling();
         $teacher = User::factory()->teacher()->create();
         $subject = Subject::factory()->create(
             [
@@ -411,6 +410,7 @@ class ExamControllerTest extends TestCase
         $exam = Exam::factory()->create(
             [
                 'subject_id' => $subject->id,
+                'published' => true,
             ]
         );
 
