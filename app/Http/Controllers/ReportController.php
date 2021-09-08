@@ -65,20 +65,33 @@ class ReportController extends Controller
             ->get()
             ->map(
                 function ($exam) {
-                    $score = $exam->users->map(
+                    $scores = $exam->users->map(
                         function ($user) {
-                            return $user->pivot->score;
+                            return [
+                                $user->pivot->score,
+                                $user->pivot->created_at->format('d/m/Y'),
+                            ];
                         }
                     );
-                    $exam->mean_score = $score->avg();
-                    $exam->scores = $score->toArray();
+
+                    $aux = [];
+                    foreach ($scores as $score) {
+                        $aux[] = $score[0];
+                    }
+
+                    $exam->scores = $aux;
+
+                    $exam->mean_score = array_sum($exam->scores)
+                        / count($exam->scores);
+                    $exam->scores = $scores->toArray();
                     return $exam;
                 }
             )
             ->toArray();
         
         if (count($report) > 0) {
-            $mean_score = array_sum(array_column($report, 'mean_score')) / count($report);
+            $mean_score = array_sum(array_column($report, 'mean_score'))
+                / count($report);
         } else {
             $mean_score = 0;
         }
@@ -86,9 +99,16 @@ class ReportController extends Controller
         $mean_score = number_format((float)$mean_score, 2, '.', '');
 
         $scores = array_column($report, 'scores');
+        $scores_notes = array_map(
+            function ($scores) {
+                return array_column($scores, 0);
+            },
+            $scores
+        );
+        $scores_notes = array_merge(...$scores_notes);
         $scores = array_merge(...$scores);
 
-        $standard_deviation = $this->standard_deviation($scores);
+        $standard_deviation = $this->standard_deviation($scores_notes);
 
         $standard_deviation = number_format($standard_deviation, 2, '.', '');
 
