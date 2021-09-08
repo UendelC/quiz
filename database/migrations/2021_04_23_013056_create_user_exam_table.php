@@ -21,6 +21,7 @@ class CreateUserExamTable extends Migration
             $table->foreign('exam_id')->references('id')->on('exams')
                 ->onDelete('cascade');
             $table->float('score')->nullable();
+            $table->timestamps();
         });
     }
 
