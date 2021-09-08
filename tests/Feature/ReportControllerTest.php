@@ -61,10 +61,22 @@ class ReportControllerTest extends TestCase
                     'mean_score' => 5.5,
                     'standard_deviation' => 3.84,
                     'scores' => [
-                        '10.0',
-                        '8.0',
-                        '4.0',
-                        '0.0',
+                        [
+                            '10.0',
+                            now()->format('d/m/Y'),
+                        ],
+                        [
+                            '8.0',
+                            now()->format('d/m/Y'),
+                        ],
+                        [
+                            '4.0',
+                            now()->format('d/m/Y'),
+                        ],
+                        [
+                            '0.0',
+                            now()->format('d/m/Y'),
+                        ],
                     ],
                 ]
             );
@@ -111,8 +123,14 @@ class ReportControllerTest extends TestCase
                     'mean_score' => 7.0,
                     'standard_deviation' => 3.0,
                     'scores' => [
-                        '10.0',
-                        '4.0',
+                        [
+                            '10.0',
+                            now()->format('d/m/Y'),
+                        ],
+                        [
+                            '4.0',
+                            now()->format('d/m/Y'),
+                        ],
                     ],
                 ]
             );
@@ -160,8 +178,14 @@ class ReportControllerTest extends TestCase
                     'mean_score' => 9.0,
                     'standard_deviation' => 1.0,
                     'scores' => [
-                        '10.0',
-                        '8.0',
+                        [
+                            '10.0',
+                            now()->format('d/m/Y'),
+                        ],
+                        [
+                            '8.0',
+                            now()->format('d/m/Y'),
+                        ],
                     ],
                 ]
             );
@@ -209,8 +233,14 @@ class ReportControllerTest extends TestCase
                     'mean_score' => 9.0,
                     'standard_deviation' => 1.0,
                     'scores' => [
-                        '10.0',
-                        '8.0',
+                        [
+                            '10.0',
+                            now()->format('d/m/Y'),
+                        ],
+                        [
+                            '8.0',
+                            now()->format('d/m/Y'),
+                        ],
                     ],
                 ]
             );
@@ -267,8 +297,14 @@ class ReportControllerTest extends TestCase
                     'mean_score' => 2.00,
                     'standard_deviation' => 2.00,
                     'scores' => [
-                        '4.0',
-                        '0.0',
+                        [
+                            '4.0',
+                            now()->format('d/m/Y'),
+                        ],
+                        [
+                            '0.0',
+                            now()->format('d/m/Y'),
+                        ],
                     ],
                 ]
             );
