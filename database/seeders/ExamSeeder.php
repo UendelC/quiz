@@ -51,7 +51,14 @@ class ExamSeeder extends Seeder
             function ($user) use ($exams) {
                 $exams->each(
                     function ($exam) use ($user) {
-                        $user->exams()->attach($exam->id, ['score' => rand(0, 10)]);
+                        $user
+                            ->exams()
+                            ->attach(
+                                $exam->id,
+                                [
+                                    'score' => rand(0, 10),
+                                ]
+                            );
                     }
                 );
             }
