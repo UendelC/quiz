@@ -164,8 +164,10 @@
           </cds-totalizer>
         </b-col>
       </b-row>
+      <b-row>
+        <canvas id="report-chart"></canvas>
+      </b-row>
     </div>
-    <canvas id="report-chart"></canvas>
     <!-- <iframe class="col-md-12" src="https://datastudio.google.com/embed/reporting/8fa71982-e217-42a7-b1cd-a78e7ed8ba3e/page/UxgAC" frameborder="0" style="border:0" allowfullscreen></iframe> -->
   </div>
 </template>
@@ -285,8 +287,23 @@ export default {
     },
 
     renderChart() {
-      let notes = this.report.scores.map(score => score[0]);
-      let dates = this.report.scores.map(score => score[1]);
+      let scores = this.report.scores.reduce((acc, cur) => {
+        let date = cur[1];
+        if (!acc[date]) {
+          acc[date] = [];
+        }
+        acc[date].push(cur[0]);
+        return acc;
+      }, {});
+
+      let meanScores = Object.keys(scores).map(date => {
+        let scores_notes = scores[date];
+        let mean = scores_notes.reduce((acc, cur) => acc + parseInt(cur), 0) / scores_notes.length;
+        return [mean, date];
+      });
+
+      let notes = meanScores.map(score => score[0]);
+      let dates = meanScores.map(score => score[1]);
       const ctx = document.getElementById('report-chart').getContext('2d');
       const chart = new Chart(ctx, {
         type: 'line',
@@ -295,8 +312,8 @@ export default {
           datasets: [{
             label: 'Notas',
             data: notes,
-            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-            borderColor: 'rgba(255, 99, 132, 1)',
+            backgroundColor: 'rgba(3, 57, 150, 0.2)',
+            borderColor: 'rgba(3, 57, 90, 1)',
             borderWidth: 1,
           }],
         },
