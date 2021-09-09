@@ -111,8 +111,7 @@
               Nota máxima
             </template>
             <template slot="value">
-              <!-- gets the greatest value from report.scores -->
-              {{ report.scores.reduce((max, score) => Math.max(max, score), 0) }}
+              {{ maxScore }}
             </template>
           </cds-totalizer>
         </b-col>
@@ -128,8 +127,7 @@
               Nota mínima
             </template>
             <template slot="value">
-              <!-- gets the lowest value from report.scores -->
-              {{ report.scores.reduce((min, score) => Math.min(min, score), 10) }}
+              {{ minScore }}
             </template>
           </cds-totalizer>
         </b-col>
@@ -225,6 +223,18 @@ export default {
     this.renderReport();
   },
 
+  computed: {
+    maxScore() {
+      let notes = this.report.scores.map(score => score[0]);
+      return Math.max(...notes);
+    },
+
+    minScore() {
+      let notes = this.report.scores.map(score => score[0]);
+      return Math.min(...notes);
+    }
+  },
+
   watch: {
     dates: function(newVal, oldVal) {
       this.renderReport();
@@ -275,17 +285,22 @@ export default {
     },
 
     renderChart() {
+      let notes = this.report.scores.map(score => score[0]);
+      let dates = this.report.scores.map(score => score[1]);
       const ctx = document.getElementById('report-chart').getContext('2d');
       const chart = new Chart(ctx, {
         type: 'line',
         data: {
-          // labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+          labels: dates,
           datasets: [{
             label: 'Notas',
-            data: this.report.scores,
+            data: notes,
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1,
           }],
         },
-        options: this.options
+        // options: this.options
       });
     },
 
