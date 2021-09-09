@@ -9,7 +9,7 @@ class ReportController extends Controller
     public function process(Request $request)
     {
         $teacher = auth()->user();
-        $teacher_query = $teacher->lecture->exams();
+        $teacher_query = $teacher->lecture->exams()->has('users');
 
         if ($request->has('categories')) {
             $teacher_query = $teacher_query
