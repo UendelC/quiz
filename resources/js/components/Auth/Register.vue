@@ -67,6 +67,23 @@
 										</ValidationProvider>
 									</div>
 								</div>
+								<div class="form-group row" v-if="type">
+									<label for="subject" class="col-md-4 col-form-label text-md-right">Turma</label>
+									<div class="col-md-6">
+										<div v-if="type == 'participant'">
+											<ValidationProvider rules="required" name="subject">
+												<select name="subject" v-model="selectedSubject" class="form-control">
+													<option v-for="subject in subjects" :key="subject.id" :value="subject.id">{{ subject.name }}</option>
+												</select>
+											</ValidationProvider>
+										</div>
+										<div v-if="type == 'teacher'">
+											<ValidationProvider rules="required" name="subject">
+												<input type="text" class="form-control" name="subject" required v-model="selectedSubject">
+											</ValidationProvider>
+										</div>
+									</div>
+								</div>
 								<div class="form-group row mb-0">
 									<div class="col-md-6 offset-md-4">
 										<button type="submit" class="btn btn-primary">
@@ -113,7 +130,12 @@ export default {
 				color: '',
 				message: '',
 			},
+			selectedSubject: '',
 		}
+	},
+
+	mounted() {
+		this.loadSubjects();
 	},
 
 	methods: {
@@ -128,6 +150,7 @@ export default {
 				password: this.password,
 				type: this.type,
 				name: this.name,
+				subject: this.selectedSubject,
 			};
 
 			axios.post('api/register', payload).then(() => {
@@ -142,6 +165,12 @@ export default {
 				}
 			});
 
+		},
+
+		loadSubjects() {
+			axios.get('api/subjects').then(response => {
+				this.subjects = response.data;
+			});
 		},
 
 		resetResponse() {

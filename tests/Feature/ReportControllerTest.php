@@ -54,7 +54,7 @@ class ReportControllerTest extends TestCase
 
         Sanctum::actingAs($teacher);
 
-        $this->json('POST', 'api/report')
+        $this->json('GET', 'api/report')
             ->assertStatus(200)
             ->assertJson(
                 [
@@ -116,7 +116,7 @@ class ReportControllerTest extends TestCase
         $another_exam->users()->attach($another_participant->id, ['score' => 0]);
 
         Sanctum::actingAs($teacher);
-        $this->json('POST', 'api/report', ['participants' => [$participant->id]])
+        $this->json('GET', 'api/report', ['participants' => [$participant->id]])
             ->assertStatus(200)
             ->assertJson(
                 [
@@ -171,7 +171,7 @@ class ReportControllerTest extends TestCase
 
         Sanctum::actingAs($teacher);
 
-        $this->json('POST', 'api/report', ['categories' => [$category->id]])
+        $this->json('GET', 'api/report', ['categories' => [$category->id]])
             ->assertStatus(200)
             ->assertJson(
                 [
@@ -226,7 +226,7 @@ class ReportControllerTest extends TestCase
 
         Sanctum::actingAs($teacher);
 
-        $this->json('POST', 'api/report', ['exams' => [$exam->id]])
+        $this->json('GET', 'api/report', ['exams' => [$exam->id]])
             ->assertStatus(200)
             ->assertJson(
                 [
@@ -284,7 +284,7 @@ class ReportControllerTest extends TestCase
         Sanctum::actingAs($teacher);
 
         $this->json(
-            'POST',
+            'GET',
             'api/report',
             [
                 'start_date' => $another_date->subDay()->format('Y-m-d'),

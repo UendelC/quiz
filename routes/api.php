@@ -5,6 +5,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
@@ -41,10 +42,12 @@ Route::middleware('auth:sanctum')->group(
         Route::get('/exams-from-teacher', [ExamController::class, 'indexTeacher']);
         Route::post('/takeexam', [UserController::class, 'takeExam']);
         Route::get('/grades', [UserController::class, 'grades']);
-        Route::post('/report', [ReportController::class, 'process']);
+        Route::get('/report', [ReportController::class, 'process']);
     }
 );
 
+Route::post('/subjects', [SubjectController::class, 'store']);
+Route::get('/subjects', [SubjectController::class, 'index']);
 Route::post('/registration', [UserController::class, 'store']);
 Route::post('/forgot-password', [UserController::class, 'forgotPassword']);
 Route::post('/questions', [QuestionController::class, 'store']);

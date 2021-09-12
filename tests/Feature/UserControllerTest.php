@@ -31,22 +31,36 @@ class UserControllerTest extends TestCase
 
     public function testCanStoreANewUser()
     {
+        $this->withoutExceptionHandling();
+        $subject = Subject::factory()->create();
         $user_data = [
             'name' => 'Uendel',
             'email' => 'uendel@gmail.com',
             'type' => 'participant',
             'password' => '123456',
+            'subject' => $subject->id,
         ];
 
         $response = $this->json('POST', 'api/register', $user_data);
 
-        $user = User::first();
         $response->assertStatus(200);
         $response->assertJSON(
             [
                 'status' => 'Success',
             ]
         );
+
+        $this->assertDatabaseHas(
+            'users', [
+                'name' => 'Uendel',
+                'email' => 'uendel@gmail.com',
+                'type' => 'participant',
+            ]
+        );
+
+        $user = User::where('email', 'uendel@gmail.com')->get()->first();
+
+        $this->assertEquals($user->subjects()->first()->id, $subject->id);
     }
 
     public function testCanShowAnUser()
@@ -121,5 +135,41 @@ class UserControllerTest extends TestCase
                     ],
                 ]
             );
+    }
+
+    public function testATeacherCanRegisterWithSubject()
+    {
+        $payload = [
+            'name' => 'Uendel',
+            'email' => 'teste@mail.com',
+            'type' => 'teacher',
+            'password' => '123456',
+            'subject' => 'Matematica',
+        ];
+
+        $response = $this->json('POST', 'api/register', $payload);
+
+        $response->assertStatus(200);
+        $response->assertJson(
+            [
+                'status' => 'Success',
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'users',
+            [
+                'name' => 'Uendel',
+                'email' => 'teste@mail.com',
+                'type' => 'teacher',
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'subjects',
+            [
+                'name' => 'Matematica',
+            ]
+        );
     }
 }

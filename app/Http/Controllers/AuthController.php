@@ -6,59 +6,74 @@ use App\Models\User;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Subject;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-	use ApiResponser;
+  use ApiResponser;
 
-	public function register(Request $request)
-	{
-		$attr = $request->validate([
-			'name' => 'required|string|max:255',
-			'email' => 'required|string|email|unique:users,email',
-			'password' => 'required|string|min:6',
-			'type' => 'required|in:participant,teacher',
-		]);
+  public function register(Request $request)
+  {
+    $attr = $request->validate([
+      'name' => 'required|string|max:255',
+      'email' => 'required|string|email|unique:users,email',
+      'password' => 'required|string|min:6',
+      'type' => 'required|in:participant,teacher',
+      'subject' => 'required',
+    ]);
 
-		$user = User::create([
-			'name' => $attr['name'],
-			'password' => bcrypt($attr['password']),
-			'email' => $attr['email'],
-			'type' => $attr['type'],
-		]);
+    $user = User::create([
+      'name' => $attr['name'],
+      'password' => bcrypt($attr['password']),
+      'email' => $attr['email'],
+      'type' => $attr['type'],
+    ]);
 
-		return $this->success([
-			'token' => $user->createToken('API Token')->plainTextToken,
-		]);
-	}
+    if ($request->type === 'teacher') {
+      Subject::create(
+          [
+              'name' => $request->subject,
+              'teacher_id' => $user->id,
+          ]
+      );
+  }
 
-	public function login(Request $request)
-	{
-		$attr = $request->validate([
-			'email' => 'required|string|email|',
-			'password' => 'required|string|min:6'
-		]);
+  if ($request->type === 'participant') {
+      Subject::find($request->subject)->participants()->attach($user);
+  }
 
-		if (!Auth::attempt($attr)) {
-			return $this->error('Credentials not match', 401);
-		}
+    return $this->success([
+      'token' => $user->createToken('API Token')->plainTextToken,
+    ]);
+  }
 
-		return $this->success([
-			'token' => auth()->user()->createToken('API Token')->plainTextToken,
-			'user' => auth()->user(),
-		]);
-	}
+  public function login(Request $request)
+  {
+    $attr = $request->validate([
+      'email' => 'required|string|email|',
+      'password' => 'required|string|min:6'
+    ]);
 
-	public function logout()
-	{
-		if (auth()->user()) {
+    if (!Auth::attempt($attr)) {
+      return $this->error('Credentials not match', 401);
+    }
 
-			auth()->user()->tokens()->delete();
-		}
+    return $this->success([
+      'token' => auth()->user()->createToken('API Token')->plainTextToken,
+      'user' => auth()->user(),
+    ]);
+  }
 
-		return [
-			'message' => 'Tokens Revoked'
-		];
-	}
+  public function logout()
+  {
+    if (auth()->user()) {
+
+      auth()->user()->tokens()->delete();
+    }
+
+    return [
+      'message' => 'Tokens Revoked'
+    ];
+  }
 }

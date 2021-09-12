@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\UserResource;
 use App\Models\Choice;
 use App\Models\Exam;
+use App\Models\Subject;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -50,6 +51,7 @@ class UserController extends Controller
                 'name' => 'required|string|max:255',
                 'type' => 'required',
                 'password' => 'required|string|min:6',
+                'subject' => 'required',
             ]
         );
 
@@ -61,6 +63,20 @@ class UserController extends Controller
                 'email' => $request->email,
             ]
         );
+
+        if ($request->type === 'teacher') {
+            Subject::create(
+                [
+                    'name' => $request->subject,
+                    'teacher_id' => $user->id,
+                ]
+            );
+        }
+
+        if ($request->type === 'participant') {
+            Subject::find($request->subject)->users()->attach($user);
+        }
+
 
         $token = $user->createToken('api-token')->plainTextToken;
 

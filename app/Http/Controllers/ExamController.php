@@ -17,8 +17,18 @@ class ExamController extends Controller
 
         if ($user->type == 'participant') {
             $previous_exams = $user->exams()->pluck('id');
-            $exam = Exam::whereNotIn('id', $previous_exams)->latest()->first();
-            return new ExamResource($exam);
+            $exam = $user
+                ->subjects()
+                ->first()
+                ->exams()
+                ->whereNotIn('id', $previous_exams)
+                ->wherePublished(true)
+                ->latest()
+                ->first();
+
+            $result = $exam ? new ExamResource($exam) : response()->json([ 'message' => 'No exams available']);
+
+            return $result;
         }
 
         if ($user->type == 'teacher') {

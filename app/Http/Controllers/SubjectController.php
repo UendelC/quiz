@@ -14,7 +14,8 @@ class SubjectController extends Controller
      */
     public function index()
     {
-        //
+        $subjects = Subject::all();
+        return response()->json($subjects);
     }
 
     /**
@@ -35,7 +36,27 @@ class SubjectController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate(
+            [
+                'name' => 'required|unique:subjects',
+            ]
+        );
+
+        $teacher = Auth()->user();
+
+        Subject::create(
+            [
+                'name' => $request->name,
+                'teacher_id' => $teacher->id,
+            ]
+        );
+
+        return response()->json(
+            [
+                'message' => 'Subject created successfully',
+            ]
+        );
+
     }
 
     /**

@@ -72,6 +72,8 @@ class ExamControllerTest extends TestCase
             ]
         );
 
+        $participant->subjects()->attach($subject);
+
         $exam_already_taken = Exam::factory()->create(
             [
                 'subject_id' => $subject->id,
