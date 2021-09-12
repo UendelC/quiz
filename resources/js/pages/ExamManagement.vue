@@ -144,11 +144,14 @@ export default {
 
     togglePublished(row) {
       axios.patch(`/api/exams/${row.item.id}`, {
+          published: row.item.published == '0' ? '1' : '0',
+        },
+        {
           headers: {
             Authorization: 'Bearer ' + token
           },
-          published: row.item.published == '0' ? '1' : '0',
-        })
+        }
+      )
         .then(response => {
           this.fetchExams();
         })

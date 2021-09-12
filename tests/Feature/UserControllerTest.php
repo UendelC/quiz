@@ -171,5 +171,9 @@ class UserControllerTest extends TestCase
                 'name' => 'Matematica',
             ]
         );
+
+        $teacher = User::where('email', 'teste@mail.com')->get()->first();
+
+        $this->assertEquals($teacher->lecture->name, 'Matematica');
     }
 }
