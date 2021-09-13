@@ -27,7 +27,7 @@
             <b-form-checkbox
               :id="'exam'+row.item.id"
               :name="row.item.title"
-              :checked="row.item.published === '1'"
+              :checked="isPublished(row.item.published)"
               :disabled="!row.item.actions"
               size='lg'
               @input="togglePublished(row)"
@@ -138,13 +138,17 @@ export default {
         });
     },
 
+    isPublished(value) {
+      return value === true || value === '1';
+    },
+
     info() {
 
     },
 
     togglePublished(row) {
       axios.patch(`/api/exams/${row.item.id}`, {
-          published: row.item.published == '0' ? '1' : '0',
+          published: this.isPublished(row.item.published) ? '0' : '1',
         },
         {
           headers: {
