@@ -236,7 +236,7 @@ class ExamController extends Controller
                         }
                     }
                 }
-            } else {
+            } elseif (isset($request['published'])) {
                 $exam->update(
                     [
                         'published' => $request->published,

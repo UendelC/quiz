@@ -77,12 +77,14 @@ class ExamControllerTest extends TestCase
         $exam_already_taken = Exam::factory()->create(
             [
                 'subject_id' => $subject->id,
+                'published' => true,
             ]
         );
 
         $exam = Exam::factory()->create(
             [
                 'subject_id' => $subject->id,
+                'published' => true,
             ]
         );
 
@@ -182,7 +184,10 @@ class ExamControllerTest extends TestCase
 
         Sanctum::actingAs($teacher);
 
-        $response = $this->json('PATCH', "api/exams/$exam->id", ['published' => '1']);
+        $response = $this->json(
+            'PATCH',
+            "api/exams/$exam->id", ['published' => '1']
+        );
 
         $response->assertStatus(200)
             ->assertJson(

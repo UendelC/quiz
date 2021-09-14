@@ -183,11 +183,10 @@ const token = Cookie.getToken();
         if (this.form.questions.length >= 1) {
           if (this.$route.params.exam_id) {
             let form = this.form;
-            axios.patch(`/api/exams/${this.$route.params.exam_id}`, {
+            axios.patch(`/api/exams/${this.$route.params.exam_id}`, form, {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
-              form,
             },
             ).then(response => {
               this.$swal({
@@ -373,7 +372,7 @@ const token = Cookie.getToken();
       mountExam(exam_id) {
         axios.get(`api/exams/${exam_id}`, {
           headers: {
-            Authorization: 'Bearer' + token
+            Authorization: 'Bearer ' + token
           }
         }).then( response => {
           this.form.title = response.data.data.title;
