@@ -228,12 +228,24 @@ export default {
   computed: {
     maxScore() {
       let notes = this.report.scores.map(score => score[0]);
-      return Math.max(...notes);
+      let max = Math.max(...notes);
+
+      if (max == -Infinity) {
+        return 0;
+      }
+
+      return max;
     },
 
     minScore() {
       let notes = this.report.scores.map(score => score[0]);
-      return Math.min(...notes);
+      let min = Math.min(...notes);
+
+      if (min == Infinity) {
+        return 0;
+      }
+
+      return min;
     }
   },
 

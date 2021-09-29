@@ -183,7 +183,7 @@ const token = Cookie.getToken();
         if (this.form.questions.length >= 1) {
           if (this.$route.params.exam_id) {
             let form = this.form;
-            axios.patch(`/api/exams/${this.$route.params.exam_id}`, form, {
+            axios.patch(`/api/exams/${this.$route.params.exam_id}`, {form} , {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
@@ -385,7 +385,6 @@ const token = Cookie.getToken();
             question.choices = choices;
             return question;
           });
-          console.log(questions);
           this.form.questions = questions;
           this.currentQuestion = questions[0];
         })
