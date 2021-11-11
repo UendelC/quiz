@@ -355,11 +355,11 @@ export default {
         data.end_date = datesFormatted[1];
       }
 
-      axios.get('api/report', {
+      axios.post('api/report', {
         headers: {
           Authorization: 'Bearer ' + token
         },
-        data
+        ...data
       }).then( response => {
         this.report = response.data;
         this.renderChart();

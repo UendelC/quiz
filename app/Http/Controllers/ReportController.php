@@ -88,7 +88,7 @@ class ReportController extends Controller
                 }
             )
             ->toArray();
-        
+
         if (count($report) > 0) {
             $mean_score = array_sum(array_column($report, 'mean_score'))
                 / count($report);
@@ -139,6 +139,5 @@ class ReportController extends Controller
         }
 
         return sqrt($variance);
-
     }
 }
