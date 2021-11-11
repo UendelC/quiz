@@ -81,10 +81,19 @@ class ReportController extends Controller
 
                     $exam->scores = $aux;
 
-                    $exam->mean_score = array_sum($exam->scores)
-                        / count($exam->scores);
+                    if (count($exam->scores) !== 0) {
+                        $exam->mean_score = array_sum($exam->scores)
+                            / count($exam->scores);
+                    } else {
+                        $exam->mean_score = 0;
+                    }
                     $exam->scores = $scores->toArray();
                     return $exam;
+                }
+            )
+            ->filter(
+                function ($exam) {
+                    return $exam->users->count() !== 0;
                 }
             )
             ->toArray();
