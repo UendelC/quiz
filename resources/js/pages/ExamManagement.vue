@@ -53,7 +53,7 @@
               size='sm'
               variant='danger'
               :disabled="!row.item.actions"
-              @click="deleteExam(row.item.id)"
+              @click="confirmDeletionExam(row.item.id)"
             >
               <b-icon icon='trash'></b-icon>
               Excluir
@@ -162,6 +162,22 @@ export default {
         .catch(error => {
           console.log(error);
         });
+    },
+
+    confirmDeletionExam(id) {
+      this.$swal({
+        title: 'Você tem certeza?',
+        text: 'Você não poderá reverter isso!',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sim, excluir!',
+        cancelButtonText: 'Não, cancelar!',
+        reverseButtons: true
+      }).then((result) => {
+        if (result.value) {
+          this.deleteExam(id);
+        }
+      });
     },
 
     deleteExam(exam_id) {
