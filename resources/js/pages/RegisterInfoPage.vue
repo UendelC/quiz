@@ -61,20 +61,22 @@
         <b-form-group id="input-group-4" label="Alternativas:" label-for="input-4">
           <div v-for="(choice, index) in currentQuestion.choices" :key="index">
             <b-form-group label="Opção:">
-              <b-form-input v-model="choice.description"></b-form-input>
-              <b-form-checkbox v-model="choice.is_right">Marque se a opção for a correta</b-form-checkbox>
-              <b-button @click="removeChoice(index)" variant='danger'>
-                <b-icon icon='trash'></b-icon>
-              </b-button>
+              <div class="d-flex align-items-center justify-content space-between">
+                <b-form-input v-model="choice.description" class="mr-2"></b-form-input>
+                <b-button @click="removeChoice(index)" variant='danger'>
+                  <b-icon icon='trash'></b-icon>
+                </b-button>
+              </div>
+              <b-form-checkbox v-model="choice.is_right">Correta?</b-form-checkbox>
             </b-form-group>
           </div>
           <b-button @click="addChoiceField()">Adicionar Alternativa</b-button>
         </b-form-group>
 
-        <div class='button-box'>
+        <div class='button-box space-between justify-content'>
           <b-button @click="addNewQuestion()" v-if="!disableNewQuestion">Cadastrar Questão</b-button>
           <b-button @click="changeQuestion(form.questions.length)" v-else>Cadastrar Nova Questão</b-button>
-          <b-button type="reset" variant="danger" @click="removeQuestion()">Remover Questão</b-button>
+          <b-button type="reset" variant="danger" @click="removeQuestion()" class="ml-2">Remover Questão</b-button>
         </div>
       </div>
       <div class="pagination-hand">
@@ -160,6 +162,8 @@ const token = Cookie.getToken();
           text: this.newCategory,
           value: this.newCategory,
         });
+
+        this.form.category = this.newCategory;
       },
 
       onSubmit(event) {
@@ -175,6 +179,7 @@ const token = Cookie.getToken();
               text: 'Questão escrita mas não cadastrada!',
               icon: 'warning',
               title: 'Aviso',
+              confirmButtonColor: '#007BFF',
             }
           );
           return;
@@ -193,6 +198,7 @@ const token = Cookie.getToken();
                 title: 'Sucesso!',
                 text: 'Avaliação atualizada com sucesso!',
                 icon: 'success',
+                confirmButtonColor: '#007BFF',
               }).then(() => {
                 this.$router.push({name: 'exam-management'});
               });
@@ -207,8 +213,9 @@ const token = Cookie.getToken();
               this.form.questions = [];
               this.$swal(
                 {
-                  title: 'Pergunta cadastrada com sucesso',
+                  title: 'Avaliação cadastrada com sucesso',
                   icon: 'success',
+                  confirmButtonColor: '#007BFF',
                 }).then( () => {
                   this.$router.push({name: 'exam-management'});
                 });
@@ -219,6 +226,7 @@ const token = Cookie.getToken();
             icon: 'error',
             title: 'Cadastro inválido',
             text: 'Você deve adicionar pelo menos uma pergunta',
+            confirmButtonColor: '#007BFF',
           });
         }
       },
@@ -284,15 +292,17 @@ const token = Cookie.getToken();
             text: 'Você deve cadastrar ao menos duas alternativas',
             icon: 'error',
             title: 'Cadastro inválido',
+            confirmButtonColor: '#007BFF',
           });
           fail = true;
         }
 
         if (this.currentQuestion.choices.some(item => item.description.length === 0)) {
           this.$swal({
-            text: 'Todas as alternativas devem ter seus textos',
+            text: 'Alternativas não podem ficar em branco',
             icon: 'error',
             title: 'Cadastro inválido',
+            confirmButtonColor: '#007BFF',
           });
           fail = true;
         }
@@ -307,6 +317,7 @@ const token = Cookie.getToken();
             text: 'Ao menos uma alternativa deve estar correta',
             icon: 'error',
             title: 'Cadastro inválido',
+            confirmButtonColor: '#007BFF',
           });
           fail = true;
         }
@@ -316,6 +327,7 @@ const token = Cookie.getToken();
             text: 'Apenas uma alternativa deve estar correta',
             icon: 'error',
             title: 'Cadastro inválido',
+            confirmButtonColor: '#007BFF',
           });
           fail = true;
         }
@@ -361,6 +373,7 @@ const token = Cookie.getToken();
             icon: 'error',
             title: 'Remoção inválida',
             text: 'Não há questão selecionada para remoção',
+            confirmButtonColor: '#007BFF',
           });
         }
       },
@@ -386,7 +399,6 @@ const token = Cookie.getToken();
             return question;
           });
           this.form.questions = questions;
-          this.currentQuestion = questions[0];
         })
       },
 

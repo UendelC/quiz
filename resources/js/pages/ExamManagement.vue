@@ -30,7 +30,7 @@
               :checked="isPublished(row.item.published)"
               :disabled="!row.item.actions"
               size='lg'
-              @input="togglePublished(row)"
+              @change="togglePublished(row)"
             >
             </b-form-checkbox>
           </template>
@@ -116,7 +116,6 @@ export default {
           {
             key: 'actions',
             label: 'Ações',
-            sortable: true,
             class: 'text-center',
           }
       ],
