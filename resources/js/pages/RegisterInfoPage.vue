@@ -73,7 +73,7 @@
           <b-button @click="addChoiceField()">Adicionar Alternativa</b-button>
         </b-form-group>
 
-        <div class='button-box space-between justify-content'>
+        <div class='button-box'>
           <b-button @click="addNewQuestion()" v-if="!disableNewQuestion">Cadastrar Questão</b-button>
           <b-button @click="changeQuestion(form.questions.length)" v-else>Cadastrar Nova Questão</b-button>
           <b-button type="reset" variant="danger" @click="removeQuestion()" class="ml-2">Remover Questão</b-button>
@@ -422,10 +422,11 @@ const token = Cookie.getToken();
 <style scope>
   .button-box {
     display: flex;
+    justify-content: center;
   }
 
   .question-body {
-    background-color: cadetblue;
+    background-color: #C4E1FD;
     padding: 15px;
     margin-bottom: 15px;
     border-radius: 10px;
