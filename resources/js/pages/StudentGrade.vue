@@ -25,14 +25,13 @@
 import NavBar from '../components/NavBar';
 import Cookie from '../service/cookie';
 
-const token = Cookie.getToken();
-
 export default {
   components: {
     NavBar
   },
 
   created() {
+    this.token = Cookie.getToken();
     this.loading = true;
     this.getGrades();
   },
@@ -58,6 +57,7 @@ export default {
             sortable: true
           }
       ],
+      token: '',
     }
   },
 
@@ -65,7 +65,7 @@ export default {
     getGrades() {
       axios.get('api/grades', {
           headers: {
-            Authorization: 'Bearer ' + token
+            Authorization: 'Bearer ' + this.token
           }
         })
         .then( response => {

@@ -76,7 +76,6 @@ import NavBar from '../components/NavBar';
 import ExamPreview from '../components/ExamPreview';
 import Cookie from '../service/cookie';
 
-const token = Cookie.getToken();
 
 export default {
   components: {
@@ -85,6 +84,7 @@ export default {
   },
 
   created() {
+    this.token = Cookie.getToken();
     this.fetchExams();
   },
 
@@ -119,6 +119,7 @@ export default {
             class: 'text-center',
           }
       ],
+      token: '',
     }
   },
 
@@ -126,7 +127,7 @@ export default {
     fetchExams() {
       axios.get('/api/exams', {
           headers: {
-            Authorization: 'Bearer ' + token
+            Authorization: 'Bearer ' + this.token
           }
         })
         .then(response => {
@@ -151,7 +152,7 @@ export default {
         },
         {
           headers: {
-            Authorization: 'Bearer ' + token
+            Authorization: 'Bearer ' + this.token
           },
         }
       )
@@ -182,7 +183,7 @@ export default {
     deleteExam(exam_id) {
       axios.delete(`/api/exams/${exam_id}`, {
         headers: {
-          Authorization: 'Bearer ' + token
+          Authorization: 'Bearer ' + this.token
         }
       })
       .then(response => {

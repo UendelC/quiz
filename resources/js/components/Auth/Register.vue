@@ -105,6 +105,7 @@
 </template>
 
 <script>
+	import Cookie from '../../service/cookie';
 	import { ValidationObserver, ValidationProvider } from 'vee-validate';
 	import { required, email } from 'vee-validate/dist/rules';
 	import { extend } from 'vee-validate';
@@ -153,10 +154,17 @@ export default {
 				subject: this.selectedSubject,
 			};
 
-			axios.post('api/register', payload).then(() => {
+			axios.post('api/register', payload).then((response) => {
 				this.response.color = 'green';
 				this.response.message = 'Seu cadastro foi feito com sucesso';
 				this.resetForm();
+
+				const token = response.data.data.token;
+				Cookie.setToken(token);
+
+				this.$store.commit('user/STORE_USER', response.data.data.user);
+				this.$router.push({name: 'about'});
+
 			}).catch(error => {
 				this.response.color = 'red';
 				this.response.message = 'Credenciais inválidas.';

@@ -55,14 +55,14 @@
 import NavBar from '../components/NavBar';
 import Cookie from '../service/cookie';
 
-const token = Cookie.getToken();
-
 export default {
   components: {
     NavBar
   },
 
   created() {
+    this.token = Cookie.getToken();
+    console.log(this.token);
     this.loading = true;
     this.getExam();
   },
@@ -88,6 +88,7 @@ export default {
       dismissAlert: false,
       processExam: false,
       noExams: false,
+      token: '',
     }
   },
 
@@ -105,7 +106,7 @@ export default {
     getExam() {
       axios.get('api/exams', {
           headers: {
-            Authorization: 'Bearer ' + token
+            Authorization: 'Bearer ' + this.token
           }
         })
         .then( response => {
@@ -150,7 +151,7 @@ export default {
           },
           {
             headers: {
-              Authorization: 'Bearer ' + token
+              Authorization: 'Bearer ' + this.token
             },
           }
         )

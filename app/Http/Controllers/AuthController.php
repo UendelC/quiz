@@ -13,15 +13,17 @@ class AuthController extends Controller
 {
   use ApiResponser;
 
-  public function register(Request $request)
-  {
-    $attr = $request->validate([
-      'name' => 'required|string|max:255',
-      'email' => 'required|string|email|unique:users,email',
-      'password' => 'required|string|min:6',
-      'type' => 'required|in:participant,teacher',
-      'subject' => 'required',
-    ]);
+    public function register(Request $request)
+    {
+        $attr = $request->validate(
+            [
+              'name' => 'required|string|max:255',
+              'email' => 'required|string|email|unique:users,email',
+              'password' => 'required|string|min:6',
+              'type' => 'required|in:participant,teacher',
+              'subject' => 'required',
+            ]
+        );
 
     $user = User::create([
       'name' => $attr['name'],
@@ -45,6 +47,7 @@ class AuthController extends Controller
 
     return $this->success([
       'token' => $user->createToken('API Token')->plainTextToken,
+      'user' => $user,
     ]);
   }
 

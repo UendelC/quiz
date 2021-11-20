@@ -181,8 +181,6 @@ import { Portuguese } from "flatpickr/dist/l10n/pt.js";
 import Cookie from '../service/cookie';
 import Chart from 'chart.js';
 
-const token = Cookie.getToken();
-
 export default {
   components: {
     NavBar,
@@ -215,10 +213,12 @@ export default {
         scores: [],
         standard_deviation: 0,
       },
+      token: '',
     }
   },
 
   created() {
+    this.token = Cookie.getToken();
     this.getCategories();
     this.getParticipants();
     this.getExams();
@@ -259,7 +259,7 @@ export default {
     getCategories() {
         axios.get('api/categories-from-teacher', {
           headers: {
-            Authorization: 'Bearer ' + token
+            Authorization: 'Bearer ' + this.token
           },
         }).then( response => {
           let categories = response.data.data.map(item => {
@@ -273,7 +273,7 @@ export default {
     getParticipants() {
       axios.get('api/participants-from-teacher', {
           headers: {
-            Authorization: 'Bearer ' + token
+            Authorization: 'Bearer ' + this.token
           },
         }).then( response => {
           let participants = response.data.data.map(item => {
@@ -287,7 +287,7 @@ export default {
     getExams() {
       axios.get('api/exams-from-teacher', {
           headers: {
-            Authorization: 'Bearer ' + token
+            Authorization: 'Bearer ' + this.token
           },
         }).then( response => {
           let exams = response.data.map(item => {
@@ -357,7 +357,7 @@ export default {
 
       axios.get('api/report', {
         headers: {
-          Authorization: 'Bearer ' + token
+          Authorization: 'Bearer ' + this.token
         },
         ...data
       }).then( response => {
