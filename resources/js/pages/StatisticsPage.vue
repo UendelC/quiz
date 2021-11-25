@@ -111,7 +111,7 @@
               Nota máxima
             </template>
             <template slot="value">
-              {{ maxScore }}
+              {{ maxScore.toFixed(2) }}
             </template>
           </cds-totalizer>
         </b-col>
@@ -127,7 +127,7 @@
               Nota mínima
             </template>
             <template slot="value">
-              {{ minScore }}
+              {{ minScore.toFixed(2) }}
             </template>
           </cds-totalizer>
         </b-col>
@@ -359,7 +359,9 @@ export default {
         headers: {
           Authorization: 'Bearer ' + this.token
         },
-        ...data
+        params: {
+          ...data
+        }
       }).then( response => {
         this.report = response.data;
         this.renderChart();

@@ -1,4 +1,5 @@
 import Vue from 'vue';
+// import { VTooltip } from 'v-tooltip';
 import router from './router.js';
 import App from './components/App';
 import bootstrap from './bootstrap-components';
@@ -10,6 +11,7 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 
 require('./bootstrap');
 
+// Vue.extend({directives: { tooltip: VTooltip }});
 Vue.use(VueSweetalert2);
 Vue.use(Cuida);
 

@@ -9,64 +9,53 @@
             <b-icon icon="plus"></b-icon>
             </b-button>
         </div>
-        <b-table
-          striped
-          hover
-          :items="items"
-          :fields="fields"
-          bordered
-          sticky-header
-          :busy="false"
-          show-empty
-          empty-text="Não há avaliações"
-        >
-          <template #empty="scope">
-            <h4>{{ scope.emptyText }}</h4>
-          </template>
-          <template #cell(published)="row">
-            <b-form-checkbox
-              :id="'exam'+row.item.id"
-              :name="row.item.title"
-              :checked="isPublished(row.item.published)"
-              :disabled="!row.item.actions"
-              size='lg'
-              @change="togglePublished(row)"
-            >
-            </b-form-checkbox>
-          </template>
-
-          <template #cell(actions)="row">
-            <b-button size="sm" @click="row.toggleDetails" variant='success'>
-              <b-icon icon='eye'></b-icon>
-              {{ row.detailsShowing ? 'Esconder' : 'Mostrar' }} Detalhes
-            </b-button>
-            <b-button
-              size='sm'
-              variant='primary'
-              :disabled="!row.item.actions"
-              @click="editExam(row.item.id)"
-            >
-              <b-icon icon='pencil-square'></b-icon>
-              Editar
-            </b-button>
-            <b-button
-              size='sm'
-              variant='danger'
-              :disabled="!row.item.actions"
-              @click="confirmDeletionExam(row.item.id)"
-            >
-              <b-icon icon='trash'></b-icon>
-              Excluir
-            </b-button>
-          </template>
-
-          <template #row-details="row">
-            <b-card>
-              <exam-preview :exam="row.item">
-              </exam-preview>
-            </b-card>
-          </template>
-        </b-table>
+          <table class="table table-hover table-striped table-bordered">
+            <caption>Lista de Avaliações</caption>
+            <thead>
+              <th scope="col">Avaliação</th>
+              <th scope="col">Categoria</th>
+              <th scope="col">Data</th>
+              <th scope="col">Publicado?</th>
+              <th scope="col">Ações</th>
+            </thead>
+            <tbody>
+              <tr v-for="exam in items" :key="exam.id">
+                <td>{{ exam.title }}</td>
+                <td>{{ exam.category.name }}</td>
+                <td>{{ exam.creation_date }}</td>
+                <td>
+                  <b-form-checkbox
+                    :id="'exam'+ exam.id"
+                    :name="exam.title"
+                    :checked="isPublished(exam.published)"
+                    :disabled="!exam.actions"
+                    size='lg'
+                    @change="togglePublished(exam)"
+                  >
+                  </b-form-checkbox>
+                </td>
+                <td>
+                  <b-button size="sm" variant='success' v-b-modal.modal-1 @click="setExam(exam)">
+                    <b-icon icon='eye'></b-icon>
+                  </b-button>
+                  <b-button
+                    variant="primary"
+                    @click="editExam(exam.id)"
+                    size="sm"
+                    :disabled="!exam.actions"
+                  >
+                    <b-icon icon='pencil-square'></b-icon>
+                  </b-button>
+                  <b-button variant="danger" @click="confirmDeletionExam(exam.id)" size="sm" :disabled="!exam.actions">
+                    <b-icon icon="trash"></b-icon>
+                  </b-button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <b-modal id="modal-1" title="Avaliação" ok-only scrollable>
+            <exam-preview :exam="selected"></exam-preview>
+          </b-modal>
       </div>
   </div>
 </template>
@@ -120,6 +109,7 @@ export default {
           }
       ],
       token: '',
+      selected: '',
     }
   },
 
@@ -146,9 +136,13 @@ export default {
 
     },
 
-    togglePublished(row) {
-      axios.patch(`/api/exams/${row.item.id}`, {
-          published: this.isPublished(row.item.published) ? '0' : '1',
+    setExam(exam) {
+      this.selected = exam;
+    },
+
+    togglePublished(exam) {
+      axios.patch(`/api/exams/${exam.id}`, {
+          published: this.isPublished(exam.published) ? '0' : '1',
         },
         {
           headers: {
@@ -172,7 +166,8 @@ export default {
         showCancelButton: true,
         confirmButtonText: 'Sim, excluir!',
         cancelButtonText: 'Não, cancelar!',
-        reverseButtons: true
+        reverseButtons: true,
+        confirmButtonColor: '#007BFF',
       }).then((result) => {
         if (result.value) {
           this.deleteExam(id);
@@ -212,5 +207,10 @@ export default {
     display: flex;
     justify-content: space-between;
     padding-bottom: 15px;
+  }
+
+  td {
+    text-align: center;
+    vertical-align: middle;
   }
 </style>

@@ -19,6 +19,9 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'type' => $this->type,
+            'subject' =>
+                $this->type == 'teacher' ?
+                    $this->lecture->name : $this->subjects()->first()->name,
         ];
     }
 }

@@ -248,6 +248,7 @@ class UserController extends Controller
             ->map(
                 function ($exam) {
                     $exam->score = $exam->pivot->score;
+                    $exam->score = number_format($exam->score, 2, '.', '');
                     $exam->date = $exam->created_at->format('d/m/Y');
                     $exam->category_name = $exam->category->name;
                     unset($exam->pivot);

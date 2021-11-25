@@ -24,6 +24,7 @@
           <template #button-content>
             <em>{{ user ? user.name : 'user' }}</em>
           </template>
+          <b-dropdown-item>Turma: {{ user.subject }}</b-dropdown-item>
           <b-dropdown-item @click="logout()">Sair</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
