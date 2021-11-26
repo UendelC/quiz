@@ -116,6 +116,7 @@ class ReportController extends Controller
         );
         $scores_notes = array_merge(...$scores_notes);
         $scores = array_merge(...$scores);
+        array_multisort(array_column($scores, 1), SORT_ASC, $scores);
 
         $standard_deviation = $this->standard_deviation($scores_notes);
 
