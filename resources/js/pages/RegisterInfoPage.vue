@@ -403,7 +403,7 @@ const token = Cookie.getToken();
       },
 
       getCategories() {
-        axios.get('api/categories', {
+        axios.get('api/categories-from-teacher', {
           headers: {
             Authorization: 'Bearer ' + token
           }
