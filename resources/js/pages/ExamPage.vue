@@ -62,7 +62,6 @@ export default {
 
   created() {
     this.token = Cookie.getToken();
-    console.log(this.token);
     this.loading = true;
     this.getExam();
   },

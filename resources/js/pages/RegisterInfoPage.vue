@@ -101,8 +101,6 @@ import NavBar from '../components/NavBar';
 import axios from 'axios';
 import Cookie from '../service/cookie';
 
-const token = Cookie.getToken();
-
   export default {
     data() {
       return {
@@ -130,6 +128,7 @@ const token = Cookie.getToken();
         newCategory: '',
         currentQuestionIndex: 0,
         questionsSize: 1,
+        token: '',
       }
     },
 
@@ -138,6 +137,7 @@ const token = Cookie.getToken();
     },
 
     created() {
+      this.token = Cookie.getToken();
       this.getCategories();
       if (this.$route.params.exam_id) {
         this.mountExam(this.$route.params.exam_id);
@@ -190,7 +190,7 @@ const token = Cookie.getToken();
             let form = this.form;
             axios.patch(`/api/exams/${this.$route.params.exam_id}`, {form} , {
               headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${this.token}`,
               },
             },
             ).then(response => {
@@ -206,7 +206,7 @@ const token = Cookie.getToken();
           } else {
             axios.post('api/exams', this.form, {
               headers: {
-                Authorization: 'Bearer ' + token
+                Authorization: 'Bearer ' + this.token
               }
             }).then( response => {
               this.resetForm();
@@ -385,7 +385,7 @@ const token = Cookie.getToken();
       mountExam(exam_id) {
         axios.get(`api/exams/${exam_id}`, {
           headers: {
-            Authorization: 'Bearer ' + token
+            Authorization: 'Bearer ' + this.token
           }
         }).then( response => {
           this.form.title = response.data.data.title;
@@ -405,7 +405,7 @@ const token = Cookie.getToken();
       getCategories() {
         axios.get('api/categories-from-teacher', {
           headers: {
-            Authorization: 'Bearer ' + token
+            Authorization: 'Bearer ' + this.token
           }
         }).then( response => {
           let categories = response.data.data.map(item => {
