@@ -11,7 +11,6 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
-use Revolution\Google\Sheets\Facades\Sheets;
 
 class UserController extends Controller
 {
